@@ -1983,3 +1983,1010 @@ John the ripper应用
 3. /test/john-1.7.6/run/unshadow /test/liming.passwd /test/liming.shadow > /test/liming.john
 4. /test/john-1.7.6/run/john /test/liming.john
 ```
+## 五、进程管理
+### 1、进程基础概念
+进程和程序的和区别
+程序是静态的 
+进程，是程序执行的过程，有生命周期 
+程序和进程无一一对应关系
+**父进程和子进程**
+- 子进程是由一个进程所产生的进程，产生这个子进程的进程成为父进程
+- 在Linux系统中使用fork创建进程
+- fork复制的内容包括父进程的数据和堆栈以及父进程的进程环境。
+- 父进终止子进程自然终止
+  **台进程和后台进程**
+  **前台进程 **
+  用户在终端输入一个命令，创建了一个进程，显示提示给用户的信息，在这个进程运行结束之前，用户不可再执行别的命令。
+  **后台进程**
+  在终端输入一个命令，随后跟一个&，shell创建进程运行这个命令，不等命令退出，而直接返回。后台进程必须是非交互的。
+## 2、进程相关的命令
+### 2.1、查看用户信息w
+w显示用户信息的含义
+
+- JCPU 以终端代号来区分，该终端所有相关进程执行时，所消耗的CPU时间会显示在这里。
+- PCPU:CPU执行程序耗费的时间
+- WHAT:用户正在执行的操作
+- load average :分别显示系统过去1、5、15分钟的平均负载程度
+- FROM:显示用户从何处登录系统，“:0”的显示代表该用户时从X Window下，打开文本窗口登录的
+- IDEL:用户闲置时间，这是一个计时器，一旦用户执行任何操作，该计时器会被重置。 
+
+查看个别用户信息 w 用户名
+
+```
+1. [root@localhost ~]# w
+2.  02:33:03 up 2 days, 10:55,  4 users,  load average: 0.06, 0.07, 0.02
+3. USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT
+4. centos   :0       -                06Oct16 ?xdm?   1:16m  0.38s /usr/bin/gnome-session
+5. root     pts/0    192.168.9.22     02:00    0.00s  0.31s  0.00s w
+6. centos   pts/1    :0.0             Fri22   27:54m  0.02s  0.02s bash
+7. [root@localhost ~]#
+```
+### 2.2、查看系统中的进程ps
+常用选项
+-a显示所有用户的进程
+-u显示用户名和启动时间
+-x显示没有控制终端的进程
+-e显示所有进程，包括没有控制终端的进程
+-l长格式显示
+-w宽行显示，可以使用多个w进行加宽显示
+ps常用输出信息的含义
+- PID :进程号
+- PPID:父进程的进程号
+- TTY:进程启动的终端
+- STAT:进程的当前状态 
+- S休眠状态,D不可中断的休眠状态，R运行状态，Z僵死状态，T停止
+- NI进程优先级
+- TIME:进程自从启动以来启动CPU的总时间
+- COMMAND/CMD:进程的命令名
+- USER:用户名
+- %CPU:占用CPU时间和总时间的百分比
+- %MEM:占用内存与系统内存总量的百分比
+ps 应用示例
+
+``` 
+ps查看隶属自己的进程
+ps -u or -l查看隶属于自己进程详细信息 
+ps -le or -aux查看所有用户执行的进程的详细信息 
+ps -aux --sort pid可按进程执行的时间、PID、UID等对进程进行排序 
+ps -aux | grep sam ps -uU sam查看系统中指定用户执行的进程 
+ps -le | grep init查看指定的进程信息 
+pstree查看进程树
+```
+### 2.3、杀死进程kill
+
+**为什么要杀死进程**
+
+- 该进程占用了过多的CPU时间
+- 该进程锁住了一个终端，使其他前台进程无法运行
+- 运行时间过长，但没有预期效果
+- 产生了过多到屏幕或磁盘的输出
+- 无法正常退出
+
+
+**关闭进程的方法**
+
+- 关闭进程 kill 进程号
+- 强行关闭kill -9 进程号
+- 重启进程kill -1 进程号
+- 关闭图形程序xkill
+- 结束所有进程killall
+- 查找服务进程号pgrep 服务名称
+- 关闭进程pkill 进程名称 或 killall 进程名称
+
+### 2.4、优先级命令
+nice
+- 指定程序的运行优先级
+- 格式: nice -n command
+- 例如：nice -5 myprogram
+
+
+renice
+
+- 改变一个正在运行的进程的优先级
+- 格式：renice n pid
+- 例如：renice -5 777
+- 优先级取值范围(-20~19)
+
+### 2.5、用户退出仍然执行nohub
+使进程在用户退出登录后仍然继续执行,nohub命令将执行后的数据信息和错误信息默认存储到文件nohub.out中 
+格式：nohub program &
+### 2.6、进程的挂起和恢复
+进程的中止(挂起)和终止
+- 挂起(Ctrl＋Z)
+- 终止(Ctrl+C)
+
+
+进程的恢复
+
+- 恢复到前台继续执行(fg)
+- 恢复到后台继续执行(bg)
+- 查看被挂起的进程(jobs)
+
+### 2.7、动态显示进程top
+job作用
+进程状态动态显示和进程控制，每5秒钟自动刷新一次（动态显示）
+常用选项：
+- d:指定刷新的时间间隔
+- c:显示整个命令行而不仅仅显示命令名
+- u:查看指定用户的进程
+- k:终止执行中的进程
+- h or ? :获得帮助
+- r:重新设置进程优先级
+- s:改变刷新的时间间隔
+- W:将当前设置写入~/.toprc中
+
+## 3、计划任务
+为什么需要计划任务
+定时完成某事，周期做某事
+计划任务的命令
+- at安排作业在某一时刻执行一次
+- batch 安排作业在系统负载不重时执行一次
+- cron 安排周期性运行的作业
+
+### 3.1、一次性任务at
+功能
+安排一个或多个命令在指定的时间运行一次 
+at的命令格式及参数
+at的格式及参数
+- at [-f 文件名] 时间
+- at -d or atrm 删除队列中的任务
+- at -l or atq 查看队列中的任务
+- at计划任务保存位置/var/spool/at/
+
+at命令指定时间的方法
+**绝对计时方法**
+
+- midnight noon teatime
+- hh:mm[today]
+- hh:mm tomorrow
+- hh:mm 星期
+- hh:mm MM/DD/YY
+
+**相对计时法**
+- now + n minutes
+- now + n hours
+- now + n days
+
+范例
+指定在今天下午17:30执行某命令(假设现在时间是下午14:30,2011年1月11日)
+命令格式如下：
+
+- at 5:30pm
+- at 17:30
+- at 17:30 today
+- at now + 3 hours
+- at now + 180 minutes
+- at 17:30 11.1.11
+- at 17:30 1/11/11
+
+
+交互方式
+at 9:00
+范例：5分钟后执行一些命令
+
+```
+1. [root@localhost testlinux]# at now +5 minutes
+2. at> ls /
+3. at> /usr/bin/wall Hello...at...command!<EOT>
+4. job 1 at 2016-10-16 05:21
+5. [root@localhost testlinux]#
+```
+
+输入完at now +5 minutes回车，会进入交互模式 
+可以连续多个命令，每个输完按回车 
+输完了，按Ctrl+D保存即可
+查看计划任务及删除
+
+```
+1. [root@localhost testc]# at -l
+2. 3   2016-10-16 05:52 a root
+3. [root@localhost testc]#at -d 3 
+```
+
+使用命令文件方式
+
+1. 生成文件at.script:
+2. 使用at命令
+
+```
+1. at -f at.script 9:00 2/2/11
+2. or
+3. at < at.script 9:00 2/2/11
+```
+
+at配置文件
+作用：限制哪些用户可以使用at命令 
+
+- /etc/at.allow 
+- /etc/at.deny
+  如果/etc/at.allow文件存在，那么只有列在此文件中的用户才可以使用at命令，若/etc/at.allow文件不存在，则检查/etc/at.deny文件是否存在。若/etc/at.deny存在，则在此文件中列出的用户都不能使用at命令。 
+  如果两个文件都不存在，则只有超级管理员可以使用at命令。 
+  如果两个文件都存在而且均为空，则所有用户都可以使用at命令。
+
+### 3.2、一次性batch命令
+作用：
+安排一个或多个命令在系统负载较轻时运行一次，（一般情况下负载较轻指平均负载降到0.8以下）
+使用方法同at
+### 3.3、周期计划任务crontab
+作用：
+用于生成cron进程所需要的crontab文件
+crontab的命令格式
+crontab{-l|-r|-e}
+
+- -l 显示当前的crontab
+- -r 删除当前的crontab
+- -e 使用编辑器编辑当前的crontab文件
+
+**crontab文件格式**
+minute hour day-of-month month-of-year day-of-week commands
+- minutes 一小时中的哪一分钟[0~59]
+- hour一天中的哪个小时[0~23]
+- day-of-month一个月中的哪一天[1~31]
+- month-of-year一年中的哪个月[1~12]
+- day-of-week 一周中的哪一天[0~6]
+- commands 执行命令
+
+
+**书写的注意事项**
+
+- 选项都不能为空，必须填入，不知道的统统用*表示任何时间
+- 每个时间字段都可以指定多个值
+- 不连续的用逗号，分割
+- 连续的值用-分割
+- 每/[分钟，小时]用：*/n，如分钟字段填*/2每隔两分钟
+- 命令应该给出绝对路径
+- 用户必须有对应运行对应的命令或程序的权限
+
+范例：
+
+```
+1. 分钟  小时  天   月   星期  命令/脚本
+2. 0       4       *   *       *       //每天4：00
+3. 0       18      *   *       2,5     //周二和周五的18:00
+4. 0       18      *   1-3     2,5     //一月到三月的星期二和星期五的18:00
+5. 30      17      *   *       2,5     //周二和周五的17:30
+6. 45      17      *   *       2,5     //周二和周五的17:45
+7. */2     12-14   * 3-6,9-12 1-5  //3月到6月和9月到12月的周一到周五的12:00到14:00每个两分钟
+```
+
+计划任务保存文件目录/var/spool/cron/root,编辑好计划任务，可以查看这个文件
+编辑用crontab -e
+也可以直接编辑/var/spool/cron/root
+crontab的配置文件
+作用：限制哪些用户可以使用crontab
+
+- /etc/cron.allow
+- /etc/cron.deny
+- /etc/crontab
+
+查看/etc/crontab
+
+```
+1. [root@localhost ~]# cat /etc/crontab
+2. SHELL=/bin/bash
+3. PATH=/sbin:/bin:/usr/sbin:/usr/bin
+4. MAILTO=root
+5. HOME=/
+6. 
+7. # run-parts
+8. 01 * * * * root run-parts /etc/cron.hourly
+9. 02 4 * * * root run-parts /etc/cron.daily
+10. 22 4 * * 0 root run-parts /etc/cron.weekly
+11. 42 4 1 * * root run-parts /etc/cron.monthly
+```
+
+这些事系统定义的计划任务 
+可以修改，也可以把我们的也加进去
+
+## 4、进程的处理方式
+处理方式有如下几种
+- standalone独立运行
+- xineted进程托管
+- atd、crond计划任务
+
+standalone独立运行模式
+standalone模式就是一直监听运行的程序，例如apache的httpd就是这种进程。这种进程特点是耗费系统资源很多，但是效应速度很快。因为一直在监听
+范例:查看监听的接口 
+netstat -an | grep "LISTEN" | more
+
+```
+1. [root@localhost ~]# netstat -an | grep "LISTEN" | more
+2. tcp        0      0 0.0.0.0:934                 0.0.0.0:*                   LISTEN      
+3. tcp        0      0 0.0.0.0:111                 0.0.0.0:*                   LISTEN      
+4. tcp        0      0 127.0.0.1:631               0.0.0.0:*                   LISTEN      
+5. tcp        0      0 127.0.0.1:25                0.0.0.0:*                   LISTEN      
+6. tcp        0      0 :::80                       :::*                        LISTEN      
+7. tcp        0      0 :::22                       :::*       				   LISTEN
+```
+
+xineted进程托管
+如ftp服务，管理目录/etc/xinetd.d，telnet等 
+对应进程 
+ps -le | grep xinetd
+进程托管，就是通过xinetd来进行监听端口，当有客户端访问，xinetd再交给对应的程序去执行。
+范例，查看telnet的配置
+
+```
+1. [root@localhost xinetd.d]# cat krb5-telnet 
+2. # default: off
+3. # description: The kerberized telnet server accepts normal telnet sessions, \
+4. #              but can also use Kerberos 5 authentication.
+5. service telnet
+6. {
+7.     flags       = REUSE
+8.     socket_type = stream        
+9.     wait        = no
+10.     user        = root
+11.     server      = /usr/kerberos/sbin/telnetd
+12.     log_on_failure  += USERID
+13.     disable     = yes # 是否启用
+14. }
+```
+
+atd、crond计划任务
+每一分钟检查一次列表形式，所以不能精确到秒
+
+
+
+# 六、文件系统管理
+大纲
+- 文件系统构成
+- 设备挂载
+- 分区和格式化原理
+- 磁盘配额
+## 1、文件系统构成
+
+- /usr/bin、/bin ： 存放所有用户可以执行的命令
+- /usr/sbin、/sbin ：存放只有root才可以执行的命令
+- /home ：用户缺省的宿主目录
+- /proc ：虚拟文件系统，存放当前的内存镜像
+- /dev :存放设备文件 
+  所有设备的文件
+- /lib:存放所有程序运行所需要的共享库
+- /lose+found : 存放一些系统出错的检查结果 
+  系统出错时可以看一下
+- /tmp ：存放用户临时文件
+- /etc ：系统配置文件，很重要建议备份
+- /var ：包括经常发生变动的文件，如邮件、日志文件、计划任务等
+- /usr ：存放所有命令、库、手册等
+- /mnt ：临时文件系统的安装点
+- /boot ：内核文件及自举程序文件保存位置
+
+## 2、常用命令
+- 查看分区使用情况：df
+- 查看文件、目录大小：du
+- 检测修复文件系统：fsck、e2fsck（单用户模式执行）
+- 判断文件类型：file
+
+
+查看分区 df
+
+```
+1. [root@localhost /]# df
+2. Filesystem           1K-blocks      Used Available Use% Mounted on
+3. /dev/sda2             78928680   2368852  72485744   4% /
+4. /dev/sda1               295561     16200    264101   6% /boot
+5. tmpfs                   517552         0    517552   0% /dev/shm
+6. [root@localhost /]#
+```
+
+df -h人性化显示
+
+```
+1. [root@localhost /]# df -h
+2. Filesystem            Size  Used Avail Use% Mounted on
+3. /dev/sda2              76G  2.3G   70G   4% /
+4. /dev/sda1             289M   16M  258M   6% /boot
+5. tmpfs                 506M     0  506M   0% /dev/shm
+6. [root@localhost /]#
+```
+
+解读
+根分区/ 大小76G 
+/boot分区 289M 
+tmpfs 临时文件系统分区 506M
+sda1、sda2：sd是硬盘，a是第一个，1和2是第一个分区，第二个分区 
+所以就是： 
+sda1:第一块硬盘的第一个分区 
+sda2:第一块硬盘的第二个分区
+df -m 以M单位显示
+
+```
+1. [root@localhost /]# df -m
+2. Filesystem           1M-blocks      Used Available Use% Mounted on
+3. /dev/sda2                77079      2314     70787   4% /
+4. /dev/sda1                  289        16       258   6% /boot
+5. tmpfs                      506         0       506   0% /dev/shm
+6. [root@localhost /]#
+```
+
+查看文件夹和文件大小du
+文件大小命令du - h filename 
+范例：
+
+```
+1. [root@localhost /]# du -h /etc/services 
+2. 364K    /etc/services
+3. [root@localhost /]#
+```
+
+目录大小命令：du -sh /etc 
+范例：
+
+```
+1. [root@localhost /]# du -sh /etc
+2. 157M    /etc
+3. [root@localhost /]#
+```
+
+修复文件系统
+当出现异常断电或其他原因导致文件系统损坏，可进入单用户模式，使用fsck命令进行修复 
+fsck -p 名称或fsck -y 名称
+查看文件类型
+
+```
+1. [root@localhost /]# file /etc/services 
+2. /etc/services: ASCII English text
+3. [root@localhost /]#
+```
+
+## 3、使用光驱
+**挂载光驱**
+```
+1. mkdir /mnt/cdrom
+2. mount /dev/cdrom /mnt/cdrom
+3. df
+4. cd /mnt/cdrom
+5. ls /mnt/cdrom
+```
+**卸载光驱**
+```
+1. umount /mnt/cdrom
+2. eject
+```
+测试：在vmware挂载dvd 
+设置Vmware: 
+虚拟机-->设置-->cd/DVD-->连接：使用ISO镜像 
+设备状态：**选已连接（重要）**
+在centos中：
+```
+1. [root@localhost /]# mkdir /mnt/cdrom
+2. [root@localhost /]# mount /dev/dvd-hda /mnt/cdrom/
+3. mount: block device /dev/dvd-hda is write-protected, mounting read-only
+4. [root@localhost /]# cd /mnt/cdrom/
+5. [root@localhost cdrom]# ls
+6. manifest.txt  vmware-solaris-tools.tar.gz
+```
+查看挂载系统
+```
+1. [root@localhost cdrom]# df -h
+2. Filesystem            Size  Used Avail Use% Mounted on
+3. /dev/sda2              76G  2.3G   70G   4% /
+4. /dev/sda1             289M   16M  258M   6% /boot
+5. tmpfs                 506M     0  506M   0% /dev/shm
+6. /dev/hda               14M   14M     0 100% /mnt/cdrom
+```
+成功挂载！
+卸载：
+```
+1. [root@localhost cdrom]# cd ..
+2. [root@localhost mnt]# umount /mnt/cdrom/
+3. [root@localhost mnt]
+```
+注意卸载的时候，当前目录不能是挂载后的目录
+或直接使用eject直接卸载
+mount: block device：在linux系统中文件分为块设备，如U盘，硬盘，光盘，这种大数据读存取的叫做块设备，文件类型代号b, 
+还有charset device:就是字节设备，如打印机。。。代号c
+
+## 4、添加磁盘或分区
+
+0
+
+
+
+# 七、Shell 脚本编程
+## 1、简单的shell语法
+### 1.1、shell的结构
+shell的结构
+
+!指定执行脚本的shell
+
+注释行
+
+命令和控制结构 
+
+创建shell程序的步骤 
+第一步：创建一个包含控制命令和控制结构的文件 
+第二步：修改这个文件的权限使他可以执行，chmod u+x 
+第三步：执行./example 
+(也可以使用sh example执行) 
+eg.example.sh
+
+```
+1. #!/bin/bash
+2. # This is to show that a example looks like.
+3. echo "Our first example"
+4. echo # This is an empty line in output.
+5. echo "We are currently in the following directory."
+6. /bin/pwd
+7. echo
+8. echo "This directory contains the following files."
+9. /bin/ls
+```
+
+eg.查看系统信息脚本 
+周一到周五发消息
+
+```
+1. #!/bin/sh
+2. # auto mail for system info
+3. 
+4. /bin/date +%F >> /tmp/sysinfo
+5. 
+6. echo "disk info:" >> /tmp/sysinfo
+7. /bin/df -h >> /tmp/sysinfo
+8. 
+9. echo >> /tmp/sysinfo
+10. echo "online users:" >> /tmp /sysinfo
+11. /usr/bin/who | /bin/grep -v root >> /tmp/sysinfo
+12. 
+13. echo >> /tmp/sysinfo
+14. echo "memory info:" >> /tmp/sysinfo
+15. /usr/binfree -m >> /tmp/sysinfo
+16. echo >> /tmp/sysinfo
+17. 
+18. #write root
+19. /usr/bin/write root < /tmp/sysinfo &
+20. 
+21. # crontab -e
+22. # 0 9 * * 1-5 script
+```
+
+### 1.2、Shell变量
+变量：是shell传递数据的一种方法，用来代表每个取值的符号名。 
+Shell有两类变量：临时变量，永久变量。
+变量定义用字母数字下划线 
+引用变量$ 
+范例：
+```
+1. NUM=1
+2. A=$B
+3. echo $A
+```
+多个字时用引号括起来 
+echo "Mike Ron" 
+单引号和双引号区别
+```
+1. DATE=$(date +%F)
+2. ABC="time is $DATE"
+3. echo $ABC
+4. 2016-10-15
+5. ABC='time is $DATE'
+6. echo $ABC
+7. time is $DATE
+```
+set 命令查看所有变量 
+unset command 删除变量
+
+位置变量 
+Shell解释执行用户命令时，将命令行的第一部分作为命令名，其他部分作为参数。由出现在命令行上的位置确定的参数成为位置参数 
+例如：
+
+1. ls -l file1 file2 file3
+   $0这个程序的文件名ls -l 
+   $n这个程序的第n个参数n = 1~9 
+   $*这个程序的所有参数 
+   $#这个程序的参数个数 
+   $$这个程序的PID 
+   $!执行上一个后台命令的PID 
+   $?执行上一个命令的返回值
+
+
+范例：自动备份脚本 
+autobak.sh
+
+```
+1. #!/bin/bash
+2. #backup files by date
+3. BACK_DIR=/backup
+4. 
+5. # Is /backup directory exists?
+6. if [ -d $BACK_DIR ]
+7. then
+8. 	echo "$BACK_DIR exists!"
+9. else
+10.     echo "$BACK_DIR isn't exists!"
+11. 	mkdir $BACK_DIR
+12.     if [ $? -eq 0 ]
+13. 	then
+14. 		echo "Create backup's directory $BACK_DIR Successfully!"
+15.     fi
+16. fi
+17. 
+18. DATE=`/bin/date +%Y%m%d`
+19. /bin/tar -cf /backup/$1.$DATE.tar $1 > /dev/null 2>> /backup/$1.bak.log
+20. /bin/gzip  /backup/$1.$DATE.tar
+21. if [ $? -eq 0 ]
+22. then
+23.     echo "$1 $DATE backup sucessfully" >> /backup/$1.bak.log
+24. else
+25.     echo "ERROR: failure $1 $DATE backup !" >> /back/$1.bak.log
+26. fi
+27. 
+28. # crontab -e
+29. # 0 3 * * 2,5 script
+```
+
+这个脚本有一个bug，不能备份二级目录
+范例：测试特殊的变量输出
+
+```
+1. #/bin/bash
+2. # Test special variable
+3. # Usage: sh special.sh file01 file02 ...
+4. 
+5. echo '$# is:' $#
+6. echo '$* is:' $*
+7. echo '$? is:' $?
+8. echo '$$ is:' $$
+9. echo '$0 is:' $0
+10. echo '$2 is:' $2
+```
+
+### 1.3、读取输入数据命令
+
+read命令：从键盘读入数据，赋给变量 
+如：read USERNAME 
+read命令让操作者和脚本之间有了互动的关系。 
+范例：
+
+```
+1. #!/bin/bash
+2. # This is test read command's script
+3. 
+4. echo "Please write 3 parameters"
+5. read first second third
+6. echo "The first parameter is:$first"
+7. echo "The second parameter is:$second"
+8. echo "The third parameter is:$third"
+```
+
+这个脚本一下子读了3个参数，通常情况下一次只读一个参数 
+如果上面的例子，输入了4个参数，那么参数3third就会是参数3和参数4 
+如输入：100 200 300 400 
+输出：
+
+```
+1. [root@localhost testshell]# sh readcmd.sh 
+2. Please write 3 parameters
+3. 100 200 300 400
+4. The first parameter is:100
+5. The second parameter is:200
+6. The third parameter is:300 400
+```
+
+### 1.4、脚本的调试
+在执行脚本的时候，向看下脚本执行到哪一步，用 
+sh -x script 
+-x 参数来打印 
+范例：
+
+```
+1. [root@localhost testshell]# sh -x readcmd.sh 
+2. + echo 'Please write 3 parameters'
+3. Please write 3 parameters
+4. + read first second third
+5. 100 200 300         
+6. + echo 'The first parameter is:100'
+7. The first parameter is:100
+8. + echo 'The second parameter is:200'
+9. The second parameter is:200
+10. + echo 'The third parameter is:300'
+11. The third parameter is:300
+12. [root@localhost testshell]#
+```
+
+这样方便调试
+
+### 1.5、算数命令expr
+shell脚本通常还需要进行一些数学运算来完成我们需要的结果。 
+shell变量的算数运算 
+expr命令：对整数型变量进行数学运算 
+例如：
+``` 
+expr 3 + 5 
+expr $var - 5 
+expr $var1 / $var2 
+expr $var1 \* $var2 
+expr 10 % 3 
+```
+注意变量与运算符之间要隔一个空格。
+复杂的expr运算
+
+```
+1. expr `expr 5 + 7`/var4
+```
+
+将运算结果赋予变量
+
+```
+1. var4=`expr $var1/$var2`
+```
+
+### 1.6、使用多个命令
+
+多个命令串起来使用顺序执行
+多个命令顺序执行在一行输入，用;隔开
+
+```
+root@ubuntu# date;who
+Mon Sep 26 161015 PDT 2016
+ubuntu   tty7         2016-09-26 1507 (0)
+root@ubuntu#
+```
+
+这里注意最大的命令行字数是255。
+
+## 2、变量测试语句
+变量测试语句：用于测试变量是否相等、是否为空，文件类型等 
+格式： 
+test 测试条件 
+测试范围：整数、字符串、文件
+字符串测试
+```
+test str1=str2 测试字符串是否相等 
+test str1!=str2测试字符串是否不相等 
+test str测试字符串是否不为空 
+test -n str测试字符串是否不为空 
+test -z str测试字符串是否为空
+```
+变量测试语句
+```
+test int1 -eq int2测试整数是否相等 
+test int1 -ge int2测试int1是否>=int2 
+test int1 -gt int2测试int1是否>int2 
+test int1 -le int2测试int1是否<=int2 
+test int1 -lt int2测试int1是否< int2 
+test int1 -ne int2测试整数是否不相等
+```
+文件测试
+```
+test -d file指定的文件是否为目录 
+test -f file指定的文件是否为常规文件 
+test -x file指定的文件是否可执行 
+test -r file指定的文件是否可读 
+test -w file指定的文件是否可写 
+test -a file指定的文件是否存在 
+test -s file文件的大小是否非0
+```
+变量测试语句一般不单独使用，一般做if语句的测试条件如：
+
+```
+1. if test -d $1 then
+2.  ...
+```
+
+变量测试语句可用[]进行简化，如： 
+`test -d $1等价于[ -d $1 ]`
+范例：测试apache服务是否启动了，如果没有启动，那么将其启动 
+apachetest.sh
+
+```
+1. #!/bin/sh
+2. # "if...else" usage
+3. # Using this program to show your system'sservices
+4. 
+5. echo "Now,this web services of ths Linux system will be detect..."
+6. echo
+7. 
+8. # Detect www service
+9. web=`/usr/bin/pgrep httpd`
+10. if [ "$web" != "" ]
+11. then
+12.     echo "The web service is running."
+13. else
+14.     echo "The web services is NOT running."
+15.     /etc/rc.d/init.d/httpd start
+16. fi
+```
+
+pgrep可以判断启动程序的PID，当程序没有执行，pgrep就会返回空 
+范例： 
+pgrep httpd 
+pkill可以关闭服务进程 
+范例： 
+pkill httpd
+
+## 3、逻辑控制语句
+流程控制语句：用于控制shell程序的流程
+### 3.1、程序退出
+exit语句：退出程序执行，并返回一个返回码，返回0表示正常退出，返回非0表示非正常推出。 
+例如：exit 0
+### 3.2、逻辑控制if语句
+if...then...fi语句
+例如：
+
+```
+1. #!/bin/bash
+2. if [ -x /etc/rc.d/init.d/httpd ]
+3. then
+4.     /etc/rc.d/init.d/httpd start
+5. fi
+```
+if/else 语句
+```
+1. if xxxx
+2. then 
+3.     ...
+4. else
+5.     ...
+6. fi
+```
+复杂的if语句
+```
+1. if 条件1 then
+2.     commands
+3. elif 条件2 then
+4.     commands
+5. else
+6.     commands
+7. fi
+```
+条件判断支持嵌套使用。
+示例：判断文件类型 
+filetype.sh
+```
+1. #!/bin/bash
+2. # This script is output filetype's script.
+3. 
+4. echo "Please input a file name:"
+5. read FILE_NAME
+6. if [ -d $FILE_NAME ]
+7. then
+8. 	echo "$FILE_NAME is a directory."
+9. elif [ -f $FILE_NAME ]
+10. then
+11. 	echo "$FILE_NAME is a common file"
+12. elif [ -c $FILE_NAME -o -b $FILE_NAME ]
+13. then
+14.     echo "$FILE_NAME is a device file"
+15. else
+16. 	echo "$FILE_NAME is an unknow file"
+17. fi
+```
+示例：比较两个数大小的脚本 
+numbermax.sh
+```
+1. #/bin/bash
+2. if [ $# -ne 2 ];then
+3. 	echo "Not enough parameters"
+4. 	exit 0
+5. fi
+6. if [ $1 -eq $2 ];then
+7. 	echo "$1 equals $2"
+8. elif [ $1 -lt $2 ];then
+9. 	echo "$1 littler than $2"
+10. elif [ $1 -gt $2 ];then
+11. 	echo "$1 greater than $2"
+12. fi
+```
+多个条件联合
+-a逻辑与，仅当两个条件都成立时，结果为真 
+-o逻辑或，两个条件只有一个成立时，结果为真
+
+### 3.3、循环语句
+for循环
+for...done语句 
+格式：
+```
+1. for 变量 in 名字表
+2. do
+3.     commands
+4. done
+```
+范例：输出星期的脚本 
+weekoutput.sh
+```
+1. #!/bin/bash
+2. # Output week day's script
+3. 
+4. for DAY in Sunday Monday Tuesday Wednesday Thursday Friday Saturday
+5. do
+6.     echo "The day is : $DAY"
+7. done
+```
+范例：将用户踢出登录的脚本 
+killuser.sh
+```
+1. #!/bin/bash
+2. # The script to kill logined user
+3. 
+4. USER_NAME="$1"
+5. 
+6. /bin/ps aux | /bin/grep $USER_NAME | /bin/awk '{print $2}' > /tmp/temp.pid
+7. 
+8. KILL_ID=`cat /tmp/temp.pid`
+9. 
+10. for PID in $KILL_ID
+11. do
+12. 	/bin/kill -9 $PID 2> /dev/null
+13. done
+```
+### 3.4、awk命令
+awk是在输入信息中提取内容的命令
+格式：
+``` 
+awk [-F 域分隔符] ‘命令’ 
+```
+如果不指定分隔符那么就是空格是分割符 
+如 
+```
+part1:part2:part3:part4 
+```
+那么$1代表part1,$2是part2,$n是partn
+示例：
+``` shell
+#1、检测系统中UID为0的用户 
+awk -F:'$3==0{print $1}'/etc/passwd 
+#2、检测系统中密码为空的用户 
+awk -F:'length($2)==0{print $1}'/etc/shadow
+```
+范例：输出用户信息 
+userinfo.sh
+```
+1. #!/bin/bash
+2. # Display user's infomation's script
+3. 
+4. # test user exists?
+5. /bin/echo "Please input the username:"
+6. read USER_NAME
+7. /bin/grep $USER_NAME /etc/passwd > /dev/null 2> /dev/null
+8. if [ $? -eq 0 ]
+9. then
+10.     /bin/echo "user name is: $USER_NAME"
+11. else
+12. 	/bin/echo "user $USER_NAME does not exist"
+13.     exit 1
+14. fi
+15. /bin/echo
+16. 
+17. # list /etc/passwd info
+18. USER_INFO=`/bin/grep ^$USER_NAME:x /etc/passwd`
+19. USER_ID=`/bin/echo $USER_INFO | /bin/awk -F: '{print $3}'`
+20. GROUP_ID=`/bin/echo $USER_INFO | /bin/awk -F: '{print $4}'`
+21. HOME_DIR=`/bin/echo $USER_INFO | /bin/awk -F: '{print $6}'`
+22. SHELL=`/bin/echo $USER_INFO | /bin/awk -F: '{print $7}'`
+23. 
+24. # get group name from GID
+25. GROUP_NAME_TMP=`cat /etc/group | /bin/grep :x:$GROUP_ID`
+26. GROUP_NAME=`/bin/echo $GROUP_NAME_TMP | /bin/awk -F: '{print $1}'`
+27. 
+28. # Output info
+29. /bin/echo "user id is: $USER_ID"
+30. /bin/echo "default group is : $GROUP_NAME"
+31. /bin/echo "home directory is : $HOME_DIR"
+32. /bin/echo "shell is : $SHELL"
+33. /bin/echo "group members info:"
+34. 
+35. # Get group members
+36. GROUP_MEM=`/usr/bin/groups $USER_NAME`
+37. /bin/echo $?
+38. /bin/echo $GROUP_MEM
+39. /bin/echo
+40. 
+41. # Get login info
+42. USER_LOGIN=`/usr/bin/who | /bin/grep $USER_NAME`
+43. if [ "$USER_LOGIN" != "" ]
+44. then
+45. 	 /bin/echo "$USER_NAME is online"
+46. else
+47.     /bin/echo "$USER_NAME NOT logged in"
+48. fi
+```
+这里要注意的是
+```
+USER_INFO=/bin/grep ^$USER_NAME:x /etc/passwd
+```
+这一行，其中^$USRE_NAME:x是为了精确匹配grep命令，不然有可能会输出多行 
+^以$USER_NAME开头
+
