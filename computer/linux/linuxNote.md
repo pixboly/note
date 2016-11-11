@@ -319,9 +319,9 @@ root@pixboly:/usr/local/apache-tomcat-6.0.41/bin# sh startup.sh
 - d 目录Directory 
 - -二进制文件 
 - l 软链接文件Link
-第二部分 
-`14` 硬链接数
-第三部分 第四部分
+  第二部分 
+  `14` 硬链接数
+  第三部分 第四部分
 
 `root root`
 所有者 所属组
@@ -1983,7 +1983,8 @@ John the ripper应用
 3. /test/john-1.7.6/run/unshadow /test/liming.passwd /test/liming.shadow > /test/liming.john
 4. /test/john-1.7.6/run/john /test/liming.john
 ```
-## 五、进程管理
+# 五、进程管理
+
 ### 1、进程基础概念
 进程和程序的和区别
 程序是静态的 
@@ -2041,7 +2042,7 @@ ps常用输出信息的含义
 - USER:用户名
 - %CPU:占用CPU时间和总时间的百分比
 - %MEM:占用内存与系统内存总量的百分比
-ps 应用示例
+  ps 应用示例
 
 ``` 
 ps查看隶属自己的进程
