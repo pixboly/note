@@ -338,6 +338,14 @@ sudo apt-get install flashplugin-installer
 
 
 
+### 3.12、安装SecureCRT
+
+下载地址：http://pan.baidu.com/s/1ntqq6Op
+
+
+
+
+
 # 二、常用命令
 
 ## 1、文件处理命令
