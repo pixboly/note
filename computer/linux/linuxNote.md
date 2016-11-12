@@ -267,6 +267,34 @@ root@pixboly:/usr/local/apache-tomcat-6.0.41/bin# sh shutdown.sh
 root@pixboly:/usr/local/apache-tomcat-6.0.41/bin# sh startup.sh
 ```
 
+### 3.6、安装sougou输入法
+
+首先安装fcitx软件：
+
+```Shell
+sudo apt-get install fcitx
+```
+
+这个输入法可以支持搜狗
+
+然后在System Setting -> Language Support里
+
+Keyboard input method system:选fcitx
+
+自己硬盘有搜狗的deb包，也可以下载最新的deb包。
+
+```shell
+dpkg -i xxxxx.deb
+```
+
+安装完成！
+
+
+
+### 3.7、虚拟机全屏
+
+
+
 # 二、常用命令
 
 ## 1、文件处理命令
