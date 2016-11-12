@@ -289,9 +289,36 @@ dpkg -i xxxxx.deb
 
 安装完成！
 
+在Ubuntu14.01下可以直接点击下载的文件进入软件中心进行安装（这里的图是已经安装过的，没有安装过的按照Ubuntu的提示安装）.
 
+![Ubuntu14.04安装搜狗输入法](http://b.hiphotos.baidu.com/exp/w=500/sign=7947e406710e0cf3a0f74efb3a46f23d/9213b07eca806538e5c2ed0794dda144ad3482fe.jpg)
+
+接下来就是在终端中输入im-config，这时会出现一个对话框，点击OK，有一个对话框，点击Yes，你会看到下面的对话框。如果上面是fcitx，就不用管，直接关闭；如果不是，就修改上面的ibus为fcitx.点击OK即可。又会出现一个对话框，接着就是OK，最后重启电脑。
+
+[![Ubuntu14.04安装搜狗输入法](http://g.hiphotos.baidu.com/exp/w=500/sign=ab617dcd3a01213fcf334edc64e636f8/dc54564e9258d10995afe0a6d258ccbf6c814d51.jpg)步骤阅读](http://jingyan.baidu.com/album/ad310e80ae6d971849f49ed3.html?picindex=3)
+
+之后，在终端中输入：fcitx-config-gtk3出现对话框如下。点击对话框左下角的（+）按钮，弹出另一个对话框如上图所示。然后，取消Only Show Current Language（很重要，否则不能找到刚安装过的搜狗输入法!）最后，在输入框中输入sogou，选中点击OK即可。添加完后将其放置到列表的最下方，注意，是最下方！！！然后默认输入法就是搜狗输入法了。
+
+[![Ubuntu14.04安装搜狗输入法](http://c.hiphotos.baidu.com/exp/w=500/sign=a7df81deac51f3dec3b2b964a4eff0ec/314e251f95cad1c89d4fb5337c3e6709c93d5129.jpg)步骤阅读](http://jingyan.baidu.com/album/ad310e80ae6d971849f49ed3.html?picindex=4)
 
 ### 3.7、虚拟机全屏
+
+###　3.8、typora安装
+
+typora是一个好用的markdown编辑器。安装方法访问官网
+
+http://www.typora.io/#linux
+
+这里写了一个脚本，进行安装，过程很慢，耐心等待。。。
+
+```shell
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BA300B7755AFCFAE
+sudo add-apt-repository 'deb https://typora.io ./linux/'
+sudo apt-get update
+sudo apt-get install typora
+```
+
+
 
 
 
