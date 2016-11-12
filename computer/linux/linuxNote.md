@@ -320,6 +320,22 @@ sudo apt-get install typora
 
 
 
+### 3.9、安装adobeflash-player 插件
+
+```SHELL
+sudo apt-get install flashplugin-installer
+```
+
+###　3.10、安装charles抓包工具
+
+从官网下载即可：https://www.charlesproxy.com/
+
+移动硬盘里有下好的！
+
+### 3.11、Gvim
+
+从ubuntu软件中心下载
+
 
 
 # 二、常用命令
