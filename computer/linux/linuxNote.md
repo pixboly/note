@@ -2991,3 +2991,17 @@ USER_INFO=/bin/grep ^$USER_NAME:x /etc/passwd
 这一行，其中^$USRE_NAME:x是为了精确匹配grep命令，不然有可能会输出多行 
 ^以$USER_NAME开头
 
+
+
+# 八、软件包管理
+
+Linux软件的软件分为两种：二进制包RPM，源代码包：tar.gz
+
+二进制包是开发完，进行打包后的包，定制性差。
+
+## 1、准备工作
+
+准备需要的软件包
+
+![](http://note.youdao.com/yws/public/resource/b1e6fe961e16dc8be1c632dd7e2717b1/xmlnote/WEBRESOURCE34878e9b93bcc163d5eecfee1d5eed0b/23521)
+
