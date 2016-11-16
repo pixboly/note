@@ -23,7 +23,7 @@ source /etc/profile
 
 ```shell
 #vim /root/.bashrc 
-export PATH="变量路径
+export PATH="变量路径"
 ```
 
 ### 2.3、直接在shell下用export命令修改
@@ -3083,4 +3083,27 @@ Linux软件的软件分为两种：二进制包RPM，源代码包：tar.gz
 准备需要的软件包
 
 ![](http://note.youdao.com/yws/public/resource/b1e6fe961e16dc8be1c632dd7e2717b1/xmlnote/WEBRESOURCE34878e9b93bcc163d5eecfee1d5eed0b/23521)
+
+
+
+
+
+# QAQ、
+
+## 1、缺少*libgcc*_*s*.*so*.1库问题解决
+
+```shell
+sudo apt-get install gcc-multilib
+```
+
+
+
+## 2、libstdc++.so.6库安装
+
+```shell
+$sudo apt-get install libstdc++6 
+$sudo apt-get install lib32stdc++6
+```
+
+
 
