@@ -3084,6 +3084,514 @@ Linux软件的软件分为两种：二进制包RPM，源代码包：tar.gz
 
 ![](http://note.youdao.com/yws/public/resource/b1e6fe961e16dc8be1c632dd7e2717b1/xmlnote/WEBRESOURCE34878e9b93bcc163d5eecfee1d5eed0b/23521)
 
+需要的工具：
+
+```shell
+gcc gcc-c++ make
+```
+
+查看make工具是否安装
+
+```shell
+[root@localhost /]# rpm -q make
+make-3.81-3.el5
+```
+
+检测不到编译工具的错误
+
+![](../hello.png)
+
+检测是否安装了gcc和gcc-c++工具
+
+```shell
+[root@localhost /]# rpm -q gcc
+gcc-4.1.2-54.el5
+[root@localhost /]# rpm -q gcc-c++
+gcc-c++-4.1.2-54.el5
+[root@localhost /]#
+```
+
+如果没有安装，那么就先安装编译的工具。
+
+rpm,yum,两种方式安装，最好使用yum安装
+
+光盘安装方式
+
+创建挂在点
+
+```shell
+mkdir /mnt/cdrom
+```
+
+挂在光盘
+
+```shell
+mount /dev/cdrom/mnt/cdrom
+```
+
+查找光盘中的文件
+
+```shell
+rpm –i /mnt/cdrom/CentOS/gcc
+```
+
+## 2、源代码码包的安装
+
+写一个脚本，解压本目录所有的tar.gz包
+
+```shell
+cd /dir
+ls *.tar.gz > ls.list
+for TAR in `cat ls.list`
+do
+        tar -zxf $TAR
+done
+```
+
+源代码包编译步骤：
+
+```shell
+1、 解压解包  tar.gz   tar -zxf
+2、 ./configure 配置—>生成配置文件
+3、 make编译
+4、 make install 拷贝，权限
+```
+
+# 九、Linux网络设置
+
+## 1、网络参考模型
+
+![](网络参考模型)
+
+TCP/IP 网卡：
+OSI物理层：网卡
+数据链路层：MAC ADDR 
+网络层：IP、APR、ICMP
+传输层：TCP、UDP
+TCP/IP应用层：SSH、APACHE
+OSI会话层：客户端---------服务器建立连结
+表示层：加密、压缩
+应用层：服务应用
+
+网卡上的MAC地址：数据链路层
+00:0C:29:1D:62:A2
+前24byte代表厂商：00:0C:29
+后24byte产品标识：1D:62:A2
+ifconfig	
+
+```shell
+[root@localhost ~]# ifconfig
+eth0      Link encap:Ethernet  HWaddr 00:0C:29:1D:62:A2  
+          inet addr:192.168.9.21  Bcast:192.168.9.255  Mask:255.255.255.0
+          inet6 addr: fe80::20c:29ff:fe1d:62a2/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:68 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:97 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:7766 (7.5 KiB)  TX bytes:15997 (15.6 KiB)
+          Interrupt:67 Base address:0x2024
+```
+
+IP地址：网络层
+
+192.168.14.127
+
+IPv6：128byte
+
+TCP/ UDP
+
+TCP:可靠，传输控制协议（断点重发、定时器）全双工/单工/半双工
+
+三次握手
+
+A				B
+
+-------------------------->SYN:请求连接
+
+<-------------------------ACK/SYN:应答请求、等待连接
+
+-------------------------->ACK:建立连接
+
+UDP:传输速度快
+
+## 2、网络访问
+
+FQHN:完整的计算机名
+
+[**www.baidu.com**](http://www.baidu.com/)**.**
+
+**最后的点：根域**
+
+**com/cn/net/org:****顶级域**
+
+**baidu:****二级域名**
+
+**www****：主机名**
+
+**全世界有****13组根域服务器**
+
+![](域名服务器层次结构)
+
+![](MACIPFQHN)
+
+访问网络需要知道对方的主机地址和MAC地址，我们一般只知道对方的IP而不知道MAC，那么就需要查询。
+查询的协议就是ARP地址解析协议。
+
+![](arp解析过程)
+
+arp广播包
+
+arp的命令：
+
+查看arp缓存表：
+
+```shell
+arp –a
+```
+
+删除arp记录
+
+```shell
+arp –d IP地址
+```
+
+手动添加静态记录	
+
+```shell
+arp –s IP地址 MAC地址
+```
+
+RARP 反向地址解析协议
+知道自己的MAC地址，去询问自己IP地址
+
+## 3、域名解析、
+
+Linux:
+
+/etc/hosts
+
+DNS:DomainName System
+
+![](域的委托管理)
+
+一个网卡可以绑定多个IP地址
+
+添加虚拟网卡：
+
+```shell
+ifconfig eth0:1 192.168.77.1
+```
+
+## 4、网络配置文件
+
+![](配置文件列表)
+
+修改IP地址
+
+简单修改
+
+```shell
+ifconfig eth0 192.168.xxx.xxx
+```
+
+修改配置文件
+
+```shell
+vi /etc/sysconfig/network-scripts/ifcfg-eth0
+```
+
+IPADDR=xxx.xxx.xxx.xxx
+
+GATWAY=xxx.xxx.xxx.xxx修改网管
+
+NETMASK=xxx.xxx.xxx.xxx子网掩码
+
+BROADCAST=xxx.xxx.xxx.xxx广播地址
+
+更改主机名
+
+```shell
+/etc/sysconfig/network
+```
+
+HOSTNAME=主机名
+
+网络启动脚本
+
+```
+/etc/rc.d/init.d/network start/stop/restart
+```
+
+主机名数据库
+
+```
+/etc/hosts
+```
+
+网路服务信息：
+
+```shell
+/etc/services
+```
+
+指定DNS服务器地址
+
+```
+/etc/resolv.conf
+```
+
+nameserverDNS服务器IP(小于等于3个)空格隔开
+
+扫描主机端口：
+
+```
+nmap IP地址
+```
+
+## 5、网络管理命令
+
+查看网络端口设置ifconfig
+
+使用/不使用网卡
+
+```shell
+ifconfig eth0 down/up
+```
+
+检测网络连接：
+
+```
+ethtool eth0
+```
+
+可以判断网卡有没有插网线
+
+
+
+ping 探测远程主机
+
+```
+ping –c 次数 –s ping包大小 xxxxxxxx
+```
+
+操作路由表route
+
+添加网关：
+
+```shell
+route add default gw xxx.xxx.xxx.xxx
+```
+
+Zebra路由软件
+
+查看路由路径traceroute
+
+```shell
+traceroute www.baidu.com
+```
+
+监控网络状态netstat
+
+```
+netstat -an
+```
+
+
+
+
+
+# 十、网络共享服务
+
+## 1、FTP
+
+![](FTP服务器配置)
+
+### 1.1、vsftp的使用
+
+#### 1.1.1、匿名访问
+
+匿名用户名：ftp或anonymous
+
+```
+ftp伪用户，宿主目录，就是用户可以访问的目录/var/ftp
+```
+
+邮箱密码
+
+配置文件/etc/vsftpd/vsftpd.conf
+
+是否开启动匿名ftp
+
+```
+anonymous_enable=YES
+```
+
+支持上传：#anon_upload_enable=YES
+日志：xferlog_enable=YES
+日志存放目录：#xferlog_file=/var/log/xferlog
+
+![](FTP配置文件配置项)
+
+ftp的命令：
+
+连接ftp
+
+```
+ftp xxx.xxx.xxx.xxx
+```
+
+ls cd 
+
+二进制传输
+
+```shell
+bin
+```
+
+切换下载目录（本地）
+
+```
+lcd
+```
+
+下载
+
+```
+get
+```
+
+下载多个
+
+```
+mget
+```
+
+上传put
+
+上传多个mput
+
+关闭交互模式	prompt
+
+退出bye
+
+连接ftp:open
+
+输入用户名密码:user
+
+#### 1.1.2、自动化下载
+
+首先写一个下载命令列表
+auto.ftp
+
+```shell
+open 192.168.9.21
+user ftp tpxsky@163.com
+bin
+prompt
+lcd /ftp.bak
+mget *
+bye
+```
+
+执行自动下载
+
+```shell
+ftp –n < auto.ftp
+```
+
+
+
+## 2、scp与rsync设置
+
+### 2.1、ssh
+
+ssh不只是用于远程登录用的一个服务
+ssh三个作用：
+1. ssh远程登录secureCRT,putty
+2. sftp 文件共享（类ftp） 
+   SSH Secure File Trans
+3. scp 文件共享(类似cp拷贝)
+
+ssh远程登录
+ssh 不允许空密码登录 
+不要用root登录
+格式：
+```
+ssh 用户名@远程主机ip地址 
+```
+常用选项：
+-2：强制使用第二代ssh协议 
+-p:端口，默认22，可以不写
+示例：
+``` 
+ssh -2 sam@192.168.9,21 
+```
+配置文件：
+```
+/etc/ssh/sshd_config 
+```
+Linux 工具:OpenSSH 
+Windows平台SSH工具:SSH Workstation
+配置文件
+``` 
+PermitRootLogin yes 限制root用户登录的 
+Port设置端口号
+```
+### 2.2、scp
+scp应用
+从本地拷贝文件到远程主机
+``` 
+scp 本地文件 用户名@IP:远程主机目标目录 
+scp -r 本地目录 用户名@IP:远程目录
+```
+从远程主机拷贝文件到本地 
+```
+scp 用户名@IP:远程目录/文件 本地目录 
+scp 用户名@IP:远程目录 本地目录
+```
+常用选项：
+-p保持原有文件属性
+-r复制目录
+-P指定端口号
+对称密钥加密
+加密和解密使用同一密钥
+优势：速度快
+缺点：密钥本身需要交换
+
+**非对称加密**
+也称公开密钥加密，使用时生成两个密钥，一个公开存放成为公钥，一个私人持有，成为私钥。
+用户用一个密钥加密的数据，用另一个密钥才能解密
+优势：安全性好 
+缺点：速度慢
+所以，加密信息时，通常是对称密钥加密，与非对称加密结合使用。
+加密文件：公钥加密，私钥解密 
+数字签名：私钥加密，公钥加密
+
+**SSH建立信任主机**
+```
+主机一 
+建立密钥对 
+ssh-kenygen -t rsa 
+生成公钥：id_rsa.pub
+主机二 
+获得主机一公钥，并生成认证密钥
+1. cat id_rsa.pub >> .ssh/authorized_keys
+2. chmod 600 .ssh/authorized_keys
+3. chmod 700 .ssh
+此时从主机一访问主机二，便不需要密码了
+```
+### 2.3、增量备份rsync
+方便的实现增量备份
+可以方便保存整个目录树和文件系统
+保持文件的权限、时间、软硬链接等
+文件传输效率高
+可以使用ssh加密通道
+**使用方法**
+启用rsync 
+编辑配置文件/etc/xinetd.d/rsync 
+设置disable=no 
+重启xinetd进程，service xinetd restart
+
 
 
 
@@ -3104,6 +3612,10 @@ sudo apt-get install gcc-multilib
 $sudo apt-get install libstdc++6 
 $sudo apt-get install lib32stdc++6
 ```
+
+
+
+## 3、securecrt假死 ctrl+s ctrl+q
 
 
 
