@@ -3099,7 +3099,7 @@ make-3.81-3.el5
 
 检测不到编译工具的错误
 
-![](../hello.png)
+![](http://note.youdao.com/yws/public/resource/b1e6fe961e16dc8be1c632dd7e2717b1/xmlnote/WEBRESOURCEc00352328cc3f3da50622374ecc65a62/23540)
 
 检测是否安装了gcc和gcc-c++工具
 
@@ -3161,7 +3161,7 @@ done
 
 ## 1、网络参考模型
 
-![](网络参考模型)
+![](http://note.youdao.com/yws/public/resource/b1e6fe961e16dc8be1c632dd7e2717b1/xmlnote/WEBRESOURCE19a29aefa0ad77a6b97152116dbfc339/23543)
 
 TCP/IP 网卡：
 OSI物理层：网卡
@@ -3218,7 +3218,7 @@ UDP:传输速度快
 
 FQHN:完整的计算机名
 
-[**www.baidu.com**](http://www.baidu.com/)**.**
+www.baidu.com.
 
 **最后的点：根域**
 
@@ -3230,14 +3230,14 @@ FQHN:完整的计算机名
 
 **全世界有****13组根域服务器**
 
-![](域名服务器层次结构)
+![](http://note.youdao.com/yws/public/resource/b1e6fe961e16dc8be1c632dd7e2717b1/xmlnote/WEBRESOURCEa0a5ee3b67405b4fb83ef218148e82c9/23546)
 
-![](MACIPFQHN)
+![](http://note.youdao.com/yws/public/resource/b1e6fe961e16dc8be1c632dd7e2717b1/xmlnote/WEBRESOURCEf2b0a35319840889d191d449ee212326/23549)
 
 访问网络需要知道对方的主机地址和MAC地址，我们一般只知道对方的IP而不知道MAC，那么就需要查询。
 查询的协议就是ARP地址解析协议。
 
-![](arp解析过程)
+![img](http://note.youdao.com/yws/public/resource/86a4da202127376e92d52776c591a605/xmlnote/WEBRESOURCEd97bf1a78367a157ad83171cd38bac5c/23554)
 
 arp广播包
 
@@ -3272,7 +3272,7 @@ Linux:
 
 DNS:DomainName System
 
-![](域的委托管理)
+![](http://note.youdao.com/yws/public/resource/86a4da202127376e92d52776c591a605/xmlnote/WEBRESOURCE5639756ad35c1e819d5bf6ccc276dd7e/23558)
 
 一个网卡可以绑定多个IP地址
 
@@ -3284,7 +3284,9 @@ ifconfig eth0:1 192.168.77.1
 
 ## 4、网络配置文件
 
-![](配置文件列表)
+
+
+![img](http://note.youdao.com/yws/public/resource/86a4da202127376e92d52776c591a605/xmlnote/WEBRESOURCEd8371f84e787bd1b83a3a23253f214eb/23561)
 
 修改IP地址
 
@@ -3404,7 +3406,7 @@ netstat -an
 
 ## 1、FTP
 
-![](FTP服务器配置)
+![](http://note.youdao.com/yws/public/resource/5d0c3b48c9baad78d7560a0a395daa48/xmlnote/WEBRESOURCEea211704e436628cfdc1d14af06df4c7/23566)
 
 ### 1.1、vsftp的使用
 
@@ -3430,7 +3432,7 @@ anonymous_enable=YES
 日志：xferlog_enable=YES
 日志存放目录：#xferlog_file=/var/log/xferlog
 
-![](FTP配置文件配置项)
+![](http://note.youdao.com/yws/public/resource/5d0c3b48c9baad78d7560a0a395daa48/xmlnote/WEBRESOURCEdd28765b970ebadf99e5035589bb4d54/23580)
 
 ftp的命令：
 
@@ -3616,6 +3618,590 @@ $sudo apt-get install lib32stdc++6
 
 
 ## 3、securecrt假死 ctrl+s ctrl+q
+
+## 4、MD5值
+
+```shell
+echo -n 'admin888' | md5sum
+```
+
+## 5、SSH服务
+
+```shell
+检查ssh服务是否启动： 
+ps -e |grep ssh
+\==================
+ubuntu默认并没有安装ssh服务，如果通过ssh链接ubuntu，需要自己手动安装ssh-server。判断是否安装ssh服务，可以通过如下命令进行：
+$ ssh localhost
+ssh: connect to host localhost port 22: Connection refused
+如上所示，表示没有还没有安装，可以通过apt安装，命令如下：
+$ sudo apt-get install openssh-server
+系统将自动进行安装，安装完成以后，先启动服务：
+$ sudo /etc/init.d/ssh start
+启动后，可以通过如下命令查看服务是否正确启动
+$ ps -e|grep ssh
+6212 ? 00:00:00 sshd
+如上表示启动ok。注意，ssh默认的端口是22，可以更改端口，更改后先stop，
+然后start就可以了。改配置在/etc/ssh/sshd_config下，如下所示。
+1. $ vi /etc/ssh/sshd_config   
+2. 
+3. #Package generated configuration file   
+4. 
+5. # See the sshd(8) manpage for details   
+6. 
+7. # What ports, IPs and protocols we listen for  
+8. 
+9. Port 22  
+最后，应该是连接的时候了。请看如下命令：
+$ ssh exceljava@192.168.158.129
+启动、停止和重启SSH:
+sudo /etc/init.d/ssh start
+sudo /etc/init.d/ssh stop
+sudo /etc/init.d/ssh restart
+或者
+sudo start ssh
+sudo stop ssh
+sudo restart ssh
+卸载SSH
+先停掉SSH服务：sudo stop ssh
+然后：apt-get –purge remove openssh-server
+================================================================
+“root@localhost's password:”说明ssh互信没有建立起来
+是Jobtracker没有执行起来，我用0.20.203的版本也是这样。一样的提示，找 不到server类。namenode和datanode都能正常运行，但是jobtracker启不来。怀疑那个版本的jar包里面有问题，可能需要重 新编译才行。如果是别的原因，希望高手给予解答。
+现在还一直使用0.20.2版本的，没有问题。新出的0.20.204和0.20.205版本都没有试过。
+另外： 
+“root@localhost's password:”说明ssh互信没有建立起来。 
+执行 
+ssh-keygen -t dsa出现提示都回车就行。 
+cd ~/.ssh 
+cat id_dsa.pub >> authorized_keys 
+然后ssh localhost如果不需要密码就是设置成功了。 
+如果不成功，检查authorized_keys和.ssh目录的权限 
+chmod 644 authorized_keys 
+cd ~ 
+chmod 700 .ssh 
+应该就可以了。
+================================================================================
+按照提示进行处理就可以了， 
+dpkg --conigure -a
+```
+
+## 6、在linux命令下如何访问一个url？
+
+```shell
+1.elinks - lynx-like替代角色模式WWW的浏览器 
+例如： 
+elinks --dump http://www.baidu.com 
+2.wget 这个会将访问的首页下载到本地 
+[root@el5-mq2 ~]# wget http://www.baidu.com 
+--2011-10-17 16:30:10-- http://www.baidu.com/ 
+Resolving www.baidu.com... 119.75.218.45, 119.75.217.56 
+Connecting to www.baidu.com|119.75.218.45|:80... connected. 
+HTTP request sent, awaiting response... 200 OK 
+Length: 8403 (8.2K) [text/html] 
+Saving to: index.html' 
+100%[==========================================================================================>] 8,403 --.-K/s in 0.01s 
+2011-10-17 16:30:10 (648 KB/s) -index.html' saved [8403/8403] 
+3.curl会显示出源码 
+curl http://www.baidu.com/index.html 
+4.lynx（这个以前在群里面见有人讨论过，但是没有尝试过，想用的话还需要下载软件） 
+lynx http://www.baidu.com
+```
+
+## 7、安装Tomcat
+
+http://www.51cto.com/art/200710/58374.htm
+
+```shell
+简单介绍Linux下安装Tomcat的步骤
+http://os.51cto.com  2007-10-19 14:54  sixth  赛迪网  我要评论(1)
+1 摘要：Tomcat是一个免费的开源的Serlvet容器，它是Apache基金会的Jakarta项目中的一个核心项目，由Apache，Sun和其它一些公司及个人共同开发而成。由于有了Sun的参与和支持，最新的Servlet和Jsp规范总能在Tomcat中得到体现。
+2 标签：Linux  安装  Tomcat  JDK
+Tomcat是一个免费的开源的Serlvet容器，它是Apache基金会的Jakarta项目中的一个核心项目，由Apache，Sun和其它一些公司及个人共同开发而成。由于有了Sun的参与和支持，最新的Servlet和Jsp规范总能在Tomcat中得到体现。
+Tomcat是稳固的独立的Web服务器与Servlet Container，不过，其Web服务器的功能则不如许多更健全的Web服务器完整，如Apache Web服务器(举例来说，Tomcat没有大量的选择性模块)。不过，Tomcat是自由的开源软件，而且有许多高手致力于其发展。
+在安装Tomcat之前需要安装j2sdk(Java 2 Software Development Kit)，也就是JDK
+◆1、安装JDK的步骤如下：
+1）下载j2sdk ，如jdk-6u1-linux-i586-rpm.bin
+2）在终端中转到jdk-6u1-linux-i586-rpm.bin所在的目录，输入命令
+#chmod +755 jdk-6u1-linux-i586-rpm.bin；//添加执行的权限。
+3）执行命令
+#./jdk-6u1-linux-i586-rpm.bin；//生成jdk-6u1-linux-i586.rpm的文件。
+4）执行命令
+#chmod +755 jdk-6u1-linux-i586.rpm；//给jdk-6u1-linux-i586.rpm添加执行的权限。
+5）执行命令
+#rpm –ivh jdk-6u1-linux-i586.rpm ； //安装jdk。
+6）安装界面会出现授权协议，按Enter键接受，把jdk安装在/usr/java/jdk1.6.0_01。
+7)设置环境变量，在 /etc/profile中加入如下内容(可以使用vi进行编辑profile)：
+JAVA_HOME=/usr/java/jdk1.6.0_01 
+CLASSPATH=$JAVA_HOME/lib:$JAVA_HOME/jre/lib 
+PATH=$PATH:$JAVA_HOME/bin:$JAVA_HOME/jre/bin 
+export PATH CLASSPATH JAVA_HOME
+8)在终端执行命令java –version，jdk的版本为jdk1.6.0_01则表示jdk已成功安装。
+◆2、安装Tomcat
+1）下载apache-tomcat-6.0.10.tar.gz
+2）#tar -zxvf apache-tomcat-6.0.10.tar.gz ；//解压
+3）#cp -R apache-tomcat-6.0.10 /usr/local/tomcat ；//拷贝apache-tomcat-6.0.10到/usr/local/下并重命名为tomcat
+4） /usr/local/tomcat/bin/startup.sh； //启动tomcat
+显示 Using CATALINA_BASE: /usr/local/tomcat
+Using CATALINA_HOME: /usr/local/tomcat
+Using CATALINA_TEMDIR: /usr/local/tomcat/temp
+Using JAVA_HOME: /usr/java/jdk1.6.0_01
+到此tomcat已经安装完成，现在使用浏览器访问 http://localhost:8080，出现tomcat默认页面，说明已经安装成功。
+```
+
+## 8、Tomcat的启动与管理
+
+```shell
+tomcat是随机启动的，所以在开启服务器的时候要手动开启tomcat，不然没法访问（网上说可以设置随着服务器开启而开启，我还不会妮。。。）
+
+1：找到tomcat安装路径
+[root@localhost ~]# cd .. （返回上一级目录）
+[root@localhost /]# ls        （列出该目录下的所有文件）
+bin   dev  home  lib64       media  mnt  opt   root  selinux  sys       tmp  var 
+boot  etc  lib   lost+found  misc   net  proc  sbin  srv      tftpboot  usr 
+[root@localhost /]# cd var   （打开var这个文件夹）
+[root@localhost var]# ls     （查看该文件的列表）
+account   crash  empty  gdm       local  mail   opt       run    tux
+arpwatch  cvs    ftp    kerberos  lock   named  preserve  spool  www
+cache     db     games  lib       log    nis    racoon    tmp    yp 
+（看来不在var文件夹中，只能返回上一级目录）
+[root@localhost var]# cd .. 
+[root@localhost /]# cd usr 
+[root@localhost usr]# ls 
+2.sql                     etc      java      lib64    sbin   tmp
+apache-tomcat-7.0.14.tar  games    kerberos  libexec  share  tomcat7.0 
+bin                       include  lib       local    src    X11R6 
+[root@localhost usr]# cd tomcat7.0   （打开tomcat7.0这个文件夹）
+[root@localhost tomcat7.0]# ls 
+bin    hsperfdata_root  LICENSE  NOTICE         RUNNING.txt  webapps
+conf  lib              logs     RELEASE-NOTES  temp         work 
+[root@localhost tomcat7.0]# cd bin 
+[root@localhost bin]# ls 
+bootstrap.jar                 configtest.sh     setclasspath.sh  tomcat-native.tar.gz
+catalina.bat                  cpappend.bat      shutdown.bat     tool-wrapper.bat
+catalina.sh                   d:                shutdown.sh      tool-wrapper.sh
+catalina-tasks.xml            digest.bat        startup.bat      version.bat
+commons-daemon.jar            digest.sh         startup.sh       version.sh
+commons-daemon-native.tar.gz  setclasspath.bat  tomcat-juli.jar 
+[root@localhost bin]# ./ （当前目录，这里是做什么用的，不太清楚。。。）
+-bash: ./: is a directory
+[root@localhost bin]# ./startup.sh      （启动Tomcat）
+Using CATALINA_BASE:   /usr/tomcat7.0
+Using CATALINA_HOME:   /usr/tomcat7.0
+Using CATALINA_TMPDIR: /usr/tomcat7.0
+Using JRE_HOME:        /usr/java/jdk1.6.0_24
+Using CLASSPATH:       /usr/tomcat7.0/bin/bootstrap.jar:/usr/tomcat7.0/bin/tomcat-juli.jar
+
+启动成功
+
+2：查看tomcat的日志
+[root@localhost bin]# cd .. 
+[root@localhost tomcat7.0]# ls 
+bin   hsperfdata_root  LICENSE  NOTICE         RUNNING.txt  webapps
+conf  lib              logs      RELEASE-NOTES  temp         work 
+[root@localhost tomcat7.0]# cd logs  (打开日志文件夹)
+[root@localhost logs]# ls 
+catalina.2011-05-30.log      localhost.2011-06-28.log
+catalina.out                 localhost_access_log.2011-06-27.txt
+host-manager.2011-05-30.log  localhost_access_log.2011-07-07.txt 
+（没用的不贴了）
+[root@localhost logs]# tail -f catalina.out   （查看tomcat的日志文件）
+```
+
+## 9、重启Tomcat
+
+```shell
+Linux下Tomcat重新启动
+在Linux系统下，重启Tomcat使用命令操作的！
+首先，进入Tomcat下的bin目录
+cd /usr/local/tomcat/bin
+使用Tomcat关闭命令
+./shutdown.sh
+查看Tomcat是否以关闭
+ps -ef|grep java
+如果显示以下相似信息，说明Tomcat还没有关闭
+
+root      7010     1  0 Apr19 ?        00:30:13 /usr/local/java/bin/java -Djava.util.logging.config.file=/usr/local/tomcat/conf/logging.properties -Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms1024m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Djava.endorsed.dirs=/usr/local/tomcat/endorsed -classpath /usr/local/tomcat/bin/bootstrap.jar -Dcatalina.base=/usr/local/tomcat -DcLinux下Tomcat重新启动
+在Linux系统下，重启Tomcat使用命令操作的！
+首先，进入Tomcat下的bin目录
+cd /usr/local/tomcat/bin
+使用Tomcat关闭命令
+./shutdown.sh
+查看Tomcat是否以关闭
+ps -ef|grep java
+如果显示以下相似信息，说明Tomcat还没有关闭
+
+root      7010     1  0 Apr19 ?        00:30:13 /usr/local/java/bin/java -Djava.util.logging.config.file=/usr/local/tomcat/conf/logging.properties -Djava.awt.headless=true -Dfile.encoding=UTF-8 -server -Xms1024m -Xmx1024m -XX:NewSize=256m -XX:MaxNewSize=256m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:+DisableExplicitGC -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Djava.endorsed.dirs=/usr/local/tomcat/endorsed -classpath /usr/local/tomcat/bin/bootstrap.jar -Dcatalina.base=/usr/local/tomcat -Dcatalina.home=/usr/local/tomcat -Djava.io.tmpdir=/usr/local/tomcat/temp org.apache.catalina.startup.Bootstrap start
+
+*如果你想直接干掉Tomcat，你可以使用kill命令，直接杀死Tomcat进程
+kill -9 7010
+然后继续查看Tomcat是否关闭
+ ps -ef|grep java
+如果出现以下信息，则表示Tomcat已经关闭
+root      7010     1  0 Apr19 ?        00:30:30 [java] <defunct>
+最后，启动Tomcat
+ ./startup.sh
+atalina.home=/usr/local/tomcat -Djava.io.tmpdir=/usr/local/tomcat/temp org.apache.catalina.startup.Bootstrap start
+
+*如果你想直接干掉Tomcat，你可以使用kill命令，直接杀死Tomcat进程
+ kill -9 7010
+然后继续查看Tomcat是否关闭
+ ps -ef|grep java
+如果出现以下信息，则表示Tomcat已经关闭
+root      7010     1  0 Apr19 ?        00:30:30 [java] <defunct>
+最后，启动Tomcat
+ ./startup.sh
+```
+
+## 10、Tomcat配置访问首页，访问目录
+
+```
+上回说到Tomcat在Linux下面的安装，今天来谈一谈tomcat的基本配置，打开tomcat的目录，其中有一个webapps目录和一个conf目录，这两个是比较重要的目录。
+1.配置端口号：我Linux的机器没有IIS，所以80端口应该不会被占用，所以可以选择让tomcat来占用80端口，这样浏览器里面就不必输入冒号加端口号了，修改conf目录下的server.xml文件，将其中的8080修改为80即可。
+
+2.添加虚拟目录：我们需要测试和发布自己的JSP工程，不能每次都打开tomcat默认的webapps文件夹往里面添加文件，而且，使用ubuntu－Linux的朋友在图像界面里在非自己的文件夹里面操作是很费事的，所以我们需要添加虚拟目录，比如我们现在有/home/newflypig/jspctest这个目录，我想将它设置为我的测试目录，第一部，需要有一个WEB－INF文件夹，我们到tomcat默认的/webapps/ROOT文件夹中拷贝一个过来，将WEB－INF文件夹中除了web.xml文件都删除了，我们仅仅需要这个web.xml就可以了。第二步，在conf目录下的server.xml添加：<Context path="/test" docBase="/home/newflypig/jsptest"  debug="0"   reloadable="true"   crossContext="true"/>主义这句话的添加位置，在最后一块的host前面添加。重启tomcat，可以访问http://localhost/test了。
+
+3.设置listings，我们在测试阶段没必要每次都从index.jsp开始编写程序，可是在浏览器中输入的时候却很是不方便，默认情况下tomcat是为我们打开listings功能的，就是目录文件浏览功能，可是我这个版本一开始就关闭了，害我总以为刚开始配置虚拟目录出毛病，后来才发现是listings功能被禁用了，测试阶段我们可以打开这个功能，发布出去后就可以将这个功能关闭了，具体做法：conf/web.xml文件，修改其中的listings字段为true，默认为false，重启tomcat，可以看到虚拟目录下正常的一些文件列表了
+```
+
+## 11、TomCat日志查看
+
+```shell
+如何查看linux tomcat日志
+ 
+1.切换到tomcat_home/logs目录下。
+ 
+2.运行tail -f catalina.out即可查看日志。
+```
+
+
+
+## 12、LAMP兄弟连，安装教程MySql
+
+检查mysql在linux是否存在
+
+```shell
+[root@localhost download]# rpm -qa | grep mysql
+mysql-5.0.77-4.el5_4.2
+```
+
+卸载mysql
+
+```shell
+[root@localhost download]# rpm -e --nodeps mysql-5.0.77-4.el5_4.2
+```
+
+解压mysql-5.0.41.tar.gz
+
+解压ncurses-5.6.tar.gz到指定的安装目录
+
+编译ncures
+
+是否启用共享文件，是否….
+
+```shell
+[root@localhost ncurses-5.6]# ./configure --with-shared --without-debug --without-ada --enable-overwrite
+```
+
+执行make
+
+ubuntu下无法安装执行
+
+```shell
+sudo apt-get install libncurses5-dev
+```
+
+```shell
+[root@localhost ncurses-5.6]# make
+[root@localhost ncurses-5.6]# sudo make install
+```
+
+创建mysql组
+
+```shell
+[root@localhost download]# groupadd mysql
+```
+
+确认添加成功
+
+```shell
+[root@localhost mysql]# grep mysql /etc/group
+```
+
+添加用户到管理员组
+
+```shell
+[root@localhost mysql]# useradd -g mysql mysql
+```
+
+确认用户添加成功过
+
+```shell
+[root@localhost mysql]# grep mysql /etc/passwd
+mysql:x:502:505::/home/mysql:/bin/bash
+```
+
+编译mySQl
+
+```shell
+[root@localhost mysql-5.0.41]# ./configure --prefix=/usr/install/mysql --with-extra-charesets=all
+```
+
+红色:安装的目录
+
+执行-make --make install
+
+生成配置文件
+
+```shell
+[root@localhost mysql-5.0.41]# cp support-files/my-medium.cnf /etc/my.cnf
+```
+
+授权表创建
+
+```shell
+[root@localhost mysql-5.0.41]# /usr/install/mysql/bin/mysql_install_db --user=mysql
+```
+
+改变所有文件所有者为root
+
+```shell
+[root@localhost mysql-5.0.41]# chown -R root /usr/install/mysql
+```
+
+把var改变为目录改变为mysql
+
+```shell
+[root@localhost mysql-5.0.41]# chown -R mysql /usr/install/mysql/var
+```
+
+改变所属于组为mysql
+
+```shell
+[root@localhost mysql-5.0.41]# chgrp -R mysql /usr/install/mysql
+```
+
+启动服务：
+
+```shell
+[root@localhost mysql-5.0.41]# /usr/install/mysql/bin/mysqld_safe --user=mysql &
+```
+
+查看Mysql的进程是否存在
+
+```shell
+[root@localhost mysql-5.0.41]# ps -le | grep mysql
+4 S     0 18984  3531  0  85   0 -  1208 wait   pts/1    00:00:00 mysqld_safe
+4 S   502 19008 18984  0  78   0 - 28552 stext  pts/1    00:00:00 mysqld
+```
+
+查看3306端口是否处于监听状态
+
+```shell
+[root@localhost mysql-5.0.41]# netstat -an | grep 3306
+tcp        0      0 0.0.0.0:3306                0.0.0.0:*                   LISTEN   
+```
+
+查看mysql的版本信息
+
+```shell
+[root@localhost mysql-5.0.41]# /usr/install/mysql/bin/mysqladmin version
+```
+
+查看所有配置详细信息
+
+```shell
+[root@localhost mysql-5.0.41]# /usr/install/mysql/bin/mysqladmin variables
+```
+
+为mysql设置密码：
+
+```shell
+[root@localhost mysql-5.0.41]# /usr/install/mysql/bin/mysql -u root
+```
+
+```shell
+mysql> SET PASSWORD FOR 'root'@'localhost'=PASSWORD('123456') ;
+```
+
+拷贝启动服务到系统目录
+
+```shell
+[root@localhost mysql-5.0.41]# cp /usr/install/mysql-5.0.41/support-files/mysql.server /etc/rc.d/init.d/mysql.d
+```
+
+改变所属者与所属组
+
+```shell
+[root@localhost mysql-5.0.41]# chown root.root /etc/rc.d/init.d/mysql.d
+```
+
+改变操作权限
+
+```shell
+[root@localhost mysql-5.0.41]# chmod 755 /etc/rc.d/init.d/mysql.d
+```
+
+将配置文件纳入linux管理体系中 ubuntu 没有chkconfig命令
+
+```shell
+[root@localhost mysql-5.0.41]# chkconfig --add mysql.d
+```
+
+检测mysql在每一级别的启动状态
+
+```shell
+[root@localhost mysql-5.0.41]# chkconfig --list mysql.d
+mysql.d         0:关闭  1:关闭  2:启用  3:启用  4:启用  5:启用  6:关闭
+```
+
+设置mysql只在3级别自启动
+
+```shell
+[root@localhost mysql-5.0.41]# chkconfig --levels 245 musql.d off
+```
+
+配置环境变量
+编辑root目录下的[root@localhost ~]# vi .bash_profile文件
+
+注销—》登录
+
+登录mysql
+
+
+
+## 13、使用rpm将rpm包安装到指定目录
+
+```shell
+redhat/centos系统下将rpm包安装到指定目录
+3 
+4 |
+5 浏览：0
+6 |
+7 更新：2014-07-20 23:22
+redhat/centos等以rpm包为载体软件的linux系统，可以直接用命令：rpm –ivh xxx.rpm 默认安装rpm包，亦可以指定安装到某一目录下。为软件包指定安装目录：要加 -relocate 参数。
+工具/原料
+linux系统，本实验以redhat系统为准
+方法/步骤
+1
+比如安装xxx.rpm包，以relocate 参数进行安装，安装到/opt/temp目录：
+rpm -ivh --relocate /=/opt/temp xxx.rpm；
+以prefix进行安装：
+rpm -ivh --prefix= /opt/temp  xxx.rpm
+```
+
+## 14、配置samba服务器超好用
+
+网址：http://blog.csdn.net/linglongwunv/article/details/5212875
+
+```shell
+注意：本文的原则是只将文件共享应用于内网服务器，并让将要被共享的目录拥有充分的读写权限属性，读者可顺着本文的思路完成基本配置流程，如需复杂读写权限功能，请参考此文章http://blog.csdn.net/linglongwunv/archive/2010/01/19/5213337.aspx。
+1、# yum -y install samba
+使用yum命令安装samba，加入-y参数，如遇询问自动选择y，全自动下载并安装samba，此过程需要一点时间。
+2、# rpm -qa | grep samba
+检查samba服务包的安装情况，会显示类似如下两个包：
+samba-common-3.0.33-3.7.el5_3.1   //服务器和客户端均需要的文件
+samba-3.0.33-3.7.el5_3.1                //服务器端文件
+3、# whereis samba
+由于是yum安装，可以用此命令查看samba安装位置，得到类似如下内容：
+samba: /etc/samba /usr/lib/samba /usr/share/samba /usr/share/man/man7/samba.7.gz
+4、# vi /etc/samba/smb.conf
+根据步骤3得知smb.conf的位置，配置samba：
+（1）[global]       找到全局设置标签，在下面进行配置
+workgroup = MYGROUP      找到此行，改为workgroup = WORKGROUP，这里以 Windows XP 默认的“WORKGROUP”为例
+; hosts allow = 192.168.1. 192.168.2. 127.      找到此行，去掉行首的“;”，并制定访问限制改为hosts allow = 192.168.0. 127.，指定内网IP地址及本地，只允许这两种情况的访问
+（2）配置最简单访问目录几个基本属性：
+[share]      windows客户端查看时看到的文件夹名
+path = /var/samba/share      共享目录位置，要系统中存在的目录，也可以配置完再创建
+read only = no
+public   = yes
+5、给配置的共享目录设置权限：
+# mkdir /var/samba/share      如刚才配置的共享目录不存在则创建
+# chown -R nobody. /var/samba/share      设置共享目录归属为 nobody 
+# chmod 777 /var/samba/share      将共享目录属性设置为 777
+6、# smbpasswd -a username      将linux系统已存在用户 username（例）加入到 Samba 用户数据库，windows访问samba共享目录时需要输入此用户名和密码
+New SMB password:      在此输入密码
+Retype new SMB password:      重复密码
+7、# service smb start
+由于是yum安装可用此命令启动samba，若想开机自启动samba服务，请参考此文章http://blog.csdn.net/linglongwunv/archive/2010/01/13/5186968.aspx
+8、若启动成功，最简单的适合内网使用的samba已配置好。卸载samba请参考此文章http://blog.csdn.net/linglongwunv/archive/2010/01/19/5212868.aspx
+9、从Windows 客户端连接到Samba 服务器，即客户端使用samba的方法可参考此文章http://blog.csdn.net/linglongwunv/archive/2010/01/19/5212919.aspx
+```
+
+在windows下 win + R 输入 ：服务器IP即可打开，可以映射网络磁盘
+
+## 15、Apache服务器配置
+
+### 15.1、配置文件
+
+配置文件目录： 
+ubuntu:/etc/httpd/httpd.conf 
+主页目录
+
+```xml
+1.         DocumentRoot "/home/sambaserver/share/project/web/yhywork/"
+2.         <Directory "/home/sambaserver/share/project/web/yhywork/">
+```
+
+主页文件
+
+```xml
+1. # DirectoryIndex: sets the file that Apache will serve if a directory
+2. # is requested.
+3. #
+4. <IfModule dir_module>
+5.     DirectoryIndex index.html
+6. </IfModule>
+```
+
+cgi-bin
+
+```shell
+1. <IfModule alias_module>
+2.     #
+3.     # Redirect: Allows you to tell clients about documents that used to 
+4.     # exist in your server's namespace, but do not anymore. The client 
+5.     # will make a new request for the document at its new location.
+6.     # Example:
+7.     # Redirect permanent /foo http://www.example.com/bar
+8. 
+9.     #
+10.     # Alias: Maps web paths into filesystem paths and is used to
+11.     # access content that does not live under the DocumentRoot.
+12.     # Example:
+13.     # Alias /webpath /full/filesystem/path
+14.     #
+15.     # If you include a trailing / on /webpath then the server will
+16.     # require it to be present in the URL.  You will also likely
+17.     # need to provide a <Directory> section to allow access to
+18.     # the filesystem path.
+19. 
+20.     #
+21.     # ScriptAlias: This controls which directories contain server scripts. 
+22.     # ScriptAliases are essentially the same as Aliases, except that
+23.     # documents in the target directory are treated as applications and
+24.     # run by the server when requested rather than as documents sent to the
+25.     # client.  The same rules about trailing "/" apply to ScriptAlias
+26.     # directives as to Alias.
+27.     #
+28.     ScriptAlias /cgi-bin/ "/home/sambaserver/share/project/web/yhywork/cgi-bin/"
+29. 
+30. </IfModule>
+1. <Directory "/home/sambaserver/share/project/web/yhywork/cgi-bin/">
+2.     AllowOverride None
+3.     Options None
+4.     Order allow,deny
+5.     Allow from all
+6.     AddType text/html .shtml .htm .html
+7.     AddType image/png .png
+8.     AddType image/jpeg .jpg
+9. </Directory>
+```
+
+增加cgi执行类型
+
+1. AddHandler cgi-script .cgi .pl .py .sh
+   注意要给cgi程序增加可执行的权限
 
 
 
