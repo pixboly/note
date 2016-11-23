@@ -120,17 +120,17 @@ post是后乘，因为矩阵的乘法不满足交换律，因此先乘、后乘�
 
 很显然，
 
-1.   
+1.   ​
 
   ![img](http://hi.csdn.net/attachment/201111/19/0_1321710153kurQ.gif)是将坐标原点移动到点![img](http://hi.csdn.net/attachment/201111/19/0_13217099588gza.gif)后，![img](http://hi.csdn.net/attachment/201111/19/0_132170933730wW.gif) 的新坐标。
 
-2.     
+2.     ​
 
 ![img](http://hi.csdn.net/attachment/201111/19/0_1321710301T9nf.gif)
 
 是将上一步变换后的![img](http://hi.csdn.net/attachment/201111/19/0_132170933730wW.gif)，围绕新的坐标原点顺时针旋转![img](http://hi.csdn.net/attachment/201111/19/0_1321709702OsPP.gif) 。
 
-3.     
+3.     ​
 
 ![img](http://hi.csdn.net/attachment/201111/19/0_1321710398Z3Je.gif)
 
@@ -364,7 +364,93 @@ public TopBar(Context context, AttributeSet attrs) {
 
 这里特别要注意的是，一定要记着释放TypedArray。
 
-​            
+
+
+## 3、代码中设置View的属性
+
+### 3.1、设置Gravity属性
+
+设置布局的gravity属性：
+
+在xml中通常有：android:gravity=""属性和android:layout_gravity=""属性
+
+那么在代码中要如何设置：
+
+设置android:gravity属性
+
+```java
+button.setGravity(Gravity.CENTER);
+```
+
+设置android:layout_gravity属性
+
+```java
+LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);  
+//此处相当于布局文件中的Android:layout_gravity属性  
+lp.gravity = Gravity.RIGHT;  
+button.setLayoutParams(lp);  
+```
+
+
+
+### 3.2、LayoutParams类
+
+其实这个LayoutParams类是用于child view（子视图） 向 parent view（父视图）传达自己的意愿的一个东西（孩子想变成什么样向其父亲说明）其实子视图父视图可以简单理解成
+一个LinearLayout 和 这个LinearLayout里边一个 TextView 的关系 TextView 就算LinearLayout的子视图 child view 。需要注意的是LayoutParams只是ViewGroup的一个内部类这里边这个也就是ViewGroup里边这个LayoutParams类是 base class 基类实际上每个不同的ViewGroup都有自己的LayoutParams子类
+比如LinearLayout 也有自己的 LayoutParams 大家打开源码看几眼就知道了
+
+
+
+### 3.3、在java代码中向RelativeLayout添加控件
+
+使用Android.view.ViewGroup.LayoutParams 的内嵌类 LayoutParams
+RelativeLayout，顾名思义，就是以“相对”位置/对齐为基础的布局方式。android.widget.RelativeLayout 有个 继承自android.view.ViewGroup.LayoutParams 的内嵌类 LayoutParams，使用这个类的实例调用 RelativeLayout.addView 就可以实现“相对布局”。 
+
+首先我们需要定义一个 RelativeLayout的布局参数relLayoutParams，如下：
+RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParam(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT)
+     其中LayoutParams中两个参数分别为：
+子控件的宽(width)，子控件的高(height),除了可以为LayoutParams.FILL_PARENT(android.view.ViewGroup.LayoutParams)等外还可以是数值;
+     下面这里就是重点了：
+通过LayoutParams的 addRule 方法来额外的添加别的规则了，android.widget.RelativeLayout.LayoutParams.addRule(int verb, int anchor)，
+其中 anchor 参数指定可以是 View 的 id(“相对于谁”)、RelativeLayout.TRUE（启用某种对齐方式）或者 是-1（应用于某些不需要 anchor 的 verb)[因为
+RelativeLayout.TRUE的值为 -1 ，所以-1或者RelativeLayout.TRUE都是可以的]、是  0 （不启用这个规则）
+     其中 verb 参数指定相对的“动作”；
+     如果是相对于父控件的相对布局的话 anchor 参数可以不用或者设置为-1或者RelativeLayout.TRUE ，如果是相对于级别和自己同一级的控件的话参数设置应该是 view 的id ,如果参数设置为 0 的话，则表示这个规则不会运用到该控件的布局中，当是相对于本身的父控件的时候这个参数可以省略。
+
+params.addRule(RelativeLayout.ABOVE,imageViewId.getId())    子控件相对于控件：imageViewId在其的上面
+params.addRule(RelativeLayout.BELOW ,imageViewId.getId())  子控件相对于控件：imageViewId在其的下面
+ 
+params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT ,-1) 与
+params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT ,RelativeLayout.TRUE) 与
+params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT )  表示的是一样的表示子控件在父控件的右边
+ 
+params.setMargins(arg0, arg1, arg2, arg3); 或者 params.topMargin=5 等等离某元素的左、上、右、下 的距离 单位
+
+3.各参数含义
+
+params.alignWithParent=true   如果对应的兄弟元素找不到的话就以父元素做参照物
+RelativeLayout.CENTER_HORIZONTAL   在父控件中水平居中
+RelativeLayout.CENTER_VERTICAL   在父控件中垂直居中
+RelativeLayout.CENTER_IN_PARENT  相对于父控件完全居中
+RelativeLayout.ALIGN_PARENT_BOTTOM  紧贴父控件的下边缘
+RelativeLayout.ALIGN_PARENT_TOP  紧贴父控件的上边缘
+RelativeLayout.ALIGN_PARENT_LEFT 紧贴父控件的左边边缘
+RelativeLayout.ALIGN_PARENT_RIGHT  紧贴父控件的右边缘
+RelativeLayout.ABOVE  在某元素的上方  需要第二个参数为某元素的ID
+RelativeLayout.BELOW 在某元素的下方  需要第二个参数为 某元素的ID
+RelativeLayout.LEFT_OF  在某元素的左边  需要第二个参数为某元素的ID
+RelativeLayout.RIGHT_OF  在某元素的右边  需要第二个参数为 某元素的ID
+RelativeLayout.ALIGN_TOP 本元素的上边缘和某元素的的上边缘对齐 需要第二个参数为 某元素的ID
+RelativeLayout.ALIGN_BOTTOM  本元素的上边缘和某元素的的下边缘对齐 需要第二个参数为 某元素的ID
+RelativeLayout.ALIGN_LEFT  本元素的上边缘和某元素的的左边缘对齐 需要第二个参数为 某元素的ID
+RelativeLayout.ALIGN_RIGHT  本元素的上边缘和某元素的的右边缘对齐 需要第二个参数为 某元素的ID
+RelativeLayout.ALIGN_BASELINE    本元素的基线和某元素的的基线对齐 需要第二个参数为 某元素的ID
+
+
+
+## 4、View的相关属性和方法
+
+
 
 
 
