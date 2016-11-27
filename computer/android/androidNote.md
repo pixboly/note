@@ -292,11 +292,11 @@ Handler、Looper进行网络访问和异步任务AsyncTask的区别？
 - Message：消息，其中包含了消息ID，消息处理对象以及处理的数据等，由MessageQueue统一列队，终由Handler处理。
 - Handler：处理者，负责Message的发送及处理。使用Handler时，需要实现handleMessage(Message msg)方法来对特定的Message进行处理，例如更新UI等。
 
-​		Handler类的主要作用：（有两个主要作用）
+  ​	Handler类的主要作用：（有两个主要作用）
 
-​		1）、在工作线程中发送消息；
+  ​	1）、在工作线程中发送消息；
 
-​		2）、在主线程中获取、并处理消息。
+  ​	2）、在主线程中获取、并处理消息。
 
 - MessageQueue：消息队列，用来存放Handler发送过来的消息，并按照FIFO规则执行。当然，存放Message并非实际意义的保存，而是将Message串联起来的，等待Looper的抽取。
 - Looper：消息泵，不断地从MessageQueue中抽取Message执行。因此，一个MessageQueue需要一个Looper
@@ -963,7 +963,10 @@ mCheckMsgThread.getLooper()返回的就是我们在run方法中创建的mLooper�
 
 #### 2.3.3、HandlerThread使用总结
 
-#### 2.3.3、HandlerThread使用总结
+什么时候使用？
+
+希望用Handler往子线程发送消息的时候使用！
+
 1. 创建带名称的HandlerThread
 ```
 HandlerThread handlerThread = new HandlerThread(“threadName”);
@@ -1223,10 +1226,10 @@ startActivity(intent); 
 
 - CATEGORY_DEFAULT： （android.intent.category.DEFAULT） Android系统中默认的执行方式，按照普通Activity的执行方式执行。
 
--   CATEGORY_HOME： （android.intent.category.HOME） 设置该组件为Home Activity。
--   CATEGORY_PREFERENCE： （android.intent.category.PREFERENCE） 设置该组件为Preference。
--   CATEGORY_LAUNCHER： （android.intent.category.LAUNCHER） 设置该组件为在当前应用程序启动器中优先级最高的Activity，通常与入口ACTION_MAIN配合使用。
--   CATEGORY_BROWSABLE： （android.intent.category.BROWSABLE） 设置该组件可以使用浏览器启动。
+- CATEGORY_HOME： （android.intent.category.HOME） 设置该组件为Home Activity。
+- CATEGORY_PREFERENCE： （android.intent.category.PREFERENCE） 设置该组件为Preference。
+- CATEGORY_LAUNCHER： （android.intent.category.LAUNCHER） 设置该组件为在当前应用程序启动器中优先级最高的Activity，通常与入口ACTION_MAIN配合使用。
+- CATEGORY_BROWSABLE： （android.intent.category.BROWSABLE） 设置该组件可以使用浏览器启动。
 
 
 
@@ -1242,10 +1245,10 @@ scheme://host:port/path
 
 - tel://：号码数据格式，后跟电话号码。
 - mailto://：邮件数据格式，后跟邮件收件人地址。
--  smsto://：短息数据格式，后跟短信接收号码。
--  content://：内容数据格式，后跟需要读取的内容。
--  file://：文件数据格式，后跟文件路径。
--  market://search?q=pname:pkgname：市场数据格式，在Google Market里搜索包名为pkgname的应用。
+- smsto://：短息数据格式，后跟短信接收号码。
+- content://：内容数据格式，后跟需要读取的内容。
+- file://：文件数据格式，后跟文件路径。
+- market://search?q=pname:pkgname：市场数据格式，在Google Market里搜索包名为pkgname的应用。
 
 - geo://latitude, longitude：经纬数据格式，在地图上显示经纬度所指定的位置。
 
