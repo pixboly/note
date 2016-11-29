@@ -1328,5 +1328,7 @@ SharedPreferences接口所提供保存信息的只能是一些基本的数据类
 
 Android开发程序员必备网站：http://www.jianshu.com/p/9ad855577d1c
 
+各种工具类:https://github.com/Blankj/AndroidUtilCode/blob/master/README-CN.md
+
 
 
