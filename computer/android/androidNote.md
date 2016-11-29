@@ -1255,13 +1255,43 @@ scheme://host:port/path
 
 
 
+# 六、数据存储
+
+·数据存储的方法
+
+1、 文件存储
+
+2、 数据库存储
+
+3、 contentProvider
+
+4、 网络存储
+
+5、 外部存储
 
 
 
+## 1、SharedPreferences
 
+SharedPreferences提供了一些基础的信息的保存功能，所有的数据都是安好key=value的形式进行保存的。
+SharedPreferences接口所提供保存信息的只能是一些基本的数据类型。
+在ShaedPreferences中有如下的几个常用的方法：
 
+- 进入可编辑状态：public abstract SharedPreferences.Editor edit ()
+  edit()的方法返回的是SharedPreferences.Editor接口的类型，在这个接口中提供了如下的几个常用的方法。
 
+**SharedPreferences.Editor接口的常用方法**
 
+| 方法                                   | 描述              |
+| ------------------------------------ | --------------- |
+| clear()                              | 清除所有的数据         |
+| commit()                             | 提交更新的数据         |
+| putBoolean(String key,boolean value) | 保存一个boolean类型数据 |
+| putFloat(String key,float value)     | 保存一个float类型数据   |
+| putInt(String key,float value)       | 保存一个int类型数据     |
+| putLong(String key,long value)       | 保存一个long类型数据    |
+| putString(String key,String value)   | 保存一个String类型数据  |
+| remove(String key)                   | 删除指定key的数据      |
 
 
 

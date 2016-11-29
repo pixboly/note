@@ -1533,6 +1533,41 @@ public class MainActivity extends Activity {
 }
 ```
 
+### 7.4、Spinner实现联动菜单思路
+
+```java
+/*
+业务要求：
+	实现Sprinner的二级联动功能
+		一级为省份的名称，二级为城市的名称
+	数据如下：
+		•北京
+			|— 海淀
+			|- 西城
+			|- 东城
+			|- 朝阳
+			|- 石景山
+		•上海
+			|- 闵行
+			|- 嘉定
+			|- 浦东
+			|- 宝山
+		•天津
+			|- 武清
+			|- 宝坻
+			|- 塘沽
+			|- 大港
+	实现思路：
+		•创建数据源，省的数据源使用一维数组，城市使用二维数组
+		•为省和城市分别创建ArrayAdapter适配器
+		•省份直接将数据源直接加入，而城市的数据源在监听一级菜单被选中时加入
+		•为省份和城市设置适配器
+		•为省份添加item被选择时的监听器，并且清空城市适配器中的数据，从被选择的
+			省份中为城市添加数据。
+*/
+
+```
+
 
 
 ## 8、ListView
@@ -1612,6 +1647,98 @@ SimpleAdapter mSimpleAdapter = new SimpleAdapter(this,mDataList,R.layout.item_te
 ```
 
 
+
+### 8.3、ListView的多Item优化
+
+当一个ListView中Item很多的时候，就需要优化了，因为当项目很多的时候，如果我们把数据一次性加载完，将非常的耗费资源，所以我们采取一种回收利用的方式循环的加载数据。
+
+范例：要实现优化，除了自定义适配器，其他的代码均不变。
+
+实现的步骤:
+
+>- 首先在这个适配器类中，写一个内部类，ViewHolder用来存数LisetView中项目的每个组件的对象
+>- 这个方法的参数：convertView对象是一个传递转变的一个对象，是View对象
+>  当ListView页面的item一次性显示不完的时候他就不为null。
+>- 将布局填充器取得的对象，赋值给convertView
+>- 如果划出屏幕，就将convert的索引交给ViewHolder对象
+>- 用convertView的对象类取得数据，返回convertView对象
+
+
+
+
+### 8.4、分页
+
+要完成滑动的ListView分页，就要为ListView增加一个OnScrollListener的监听器。
+
+**分页的思想:**
+
+> 借助 ListView组件的OnScrollListener监听事件，去判断何时该加载新数据；
+>
+>   往服务器get传递表示页码的参数：page。而该page会每加载一屏数据后自动加一；
+>
+>   利用addAll()方法不断往list集合末端添加新数据，使得适配器的数据源每新加载一屏数据就发生变化；
+>
+>   利用适配器对象的notifyDataSetChanged()方法。该方法的作用是通知适配器自己及与该数据有关的view，数据已经发生变动，要刷新自己、更新数据。
+
+**分页的实现**
+
+**第一步：**
+
+在OnScrollListener的onScroll方法中判断：一页显示的记录数 +
+划过的记录数 是否等于总的记录数
+
+```java
+@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				isBottom = (firstVisibleItem + visibleItemCount == totalItemCount) ;
+				Log.i(TAG, "--isBottom-->>" + isBottom);
+			}
+```
+
+第二步：
+
+在onScrollListener的onScrollStateChanged方法中，作出滑动到底部时的响应事件。将自定义的布局显示出来。完成响应的事件。
+
+```java
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				if (isBottom) {
+					layout_main_info.setVisibility(View.VISIBLE);
+				}
+			}
+```
+
+第三步:
+
+定义一个布局，在滑动到底部才会显示出来，
+
+```xml
+<LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/layout_main_info"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="#000"
+        android:layout_height="wrap_content" >
+
+        <ProgressBar
+            android:id="@+id/progressBar1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/textView_main_info"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:textColor="#FFF"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:text="数据加载中..." />
+        
+    </LinearLayout>
+```
 
 
 

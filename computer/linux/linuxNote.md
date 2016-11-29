@@ -43,6 +43,24 @@ export PATH="变量路径"
 5. export CLASSPATH=".:$JAVA_HOME/lib:$JRE_HOME/lib"
 ```
 
+### 2.5、修改命令行显示
+
+比较喜欢centos的命令行显示方式
+
+可以在.bash_profile里加入如下配置
+
+```shell
+export PS1='[\u@\h \W]\$'
+```
+
+执行命令：
+
+```shell
+source .bash_profile
+```
+
+
+
 ## 3、Ubuntu装机总结
 
 ### 3.1、安装系统到U盘
