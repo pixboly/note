@@ -13,20 +13,24 @@
 首先在此文件中设置环境变量;
 export 设置好的环境变量.
 
-```shell
+```
 vim /etc/profile
+```
 
+```
 source /etc/profile
 ```
 
 ### 2.2、修改.bashrc
 
-```shell
-#vim /root/.bashrc 
-export PATH="变量路径"
 ```
 
-### 2.3、直接在shell下用export命令修改
+```
+
+```
+#vim /root/.bashrc 
+export PATH="变量路径"2.3、直接在shell下用export命令修改
+```
 
 ```shell
 #export PATH="$var_PATH" 
@@ -3584,12 +3588,12 @@ Port设置端口号
 ### 2.2、scp
 scp应用
 从本地拷贝文件到远程主机
-``` 
+``` python
 scp 本地文件 用户名@IP:远程主机目标目录 
 scp -r 本地目录 用户名@IP:远程目录
 ```
 从远程主机拷贝文件到本地 
-```
+```python
 scp 用户名@IP:远程目录/文件 本地目录 
 scp 用户名@IP:远程目录 本地目录
 ```
@@ -3635,6 +3639,183 @@ ssh-kenygen -t rsa 
 编辑配置文件/etc/xinetd.d/rsync 
 设置disable=no 
 重启xinetd进程，service xinetd restart
+
+
+
+## 3、samba
+
+### 3.1、samba简介
+
+samba是基于SMB（Server Message Block）协议，是一种客户端服务器协议。
+
+位于应用层。
+
+ubuntu启动服务
+
+```shell
+service sambstart
+```
+
+centos启动服务
+
+```shell
+/etc/rc.d/init.d/smb start
+```
+
+Samba有两个守护进程：smbd和nmbd
+
+--- smbd监听139TCP端口
+
+---nmbd监听137和138UDP端口里
+
+smbd进程的作用是处理SMB请求包，负责用户验证和文件共享。
+
+nmbd进程的作用是处理浏览共享和计算机名称解析。
+
+
+
+### 3.2、samba配置
+
+Samba的配置文件存放在
+
+```ruby
+/etc/samba/smb.conf
+```
+
+包括四个设置段
+
+```java
+[global]				// 设置全局环境选项
+[homes]					// 设置用户宿主目录共享
+[printers]				// 设置打印机共享
+[sharefiles]			// 设置文件共享,这个名字不是固定的，可以随意起名字。		
+```
+
+
+
+看配置文件不看注释，可以使用如下命令
+
+```shell
+grep -v "^#" /etc/samba/smb.conf | more
+```
+
+也可以覆盖重新生成
+
+```shell
+grep -v "^#" /etc/samba/smb.conf.bak > /etc/samba/smb.conf
+```
+
+
+
+#### 3.2.1、[grobal]段的配置
+
+workgroup=指定工作组或域
+
+workgroup默认即可，可以不用修改，如果真的有组管理才进行更改
+
+
+
+server string=描述信息
+
+描述信息是用户登录时的提示信息
+
+
+
+security=指定安全模式
+
+- share 不需要用户名，密码，无权限验证
+  - user缺省设置，由Linux Samba服务器验证
+- server 第三方主机验证，一般不采用
+- domain 第三方主机验证，一般不采用
+
+
+
+
+**哪些主机可以访问**
+
+hosts allow=127. 192.168.24. 192.168.23.
+
+哪些主机不可以访问
+
+hosts deny= 192.168.24.1
+
+访问有限原则
+
+
+
+日志配置
+
+log file=制定日志的存放路径
+
+max log size=制定日志文件大小
+
+```java
+   log file = /var/log/samba/log.%m   //%m是进程
+
+   max log size = 1000				  // 1000k
+```
+
+
+
+#### 3.2.2、[homes]段配置
+
+comment=描述信息
+
+browseable=no 无权限目录隐藏
+
+writable=yes yes可写，no只读
+
+
+
+### 3.3、samba应用实例
+
+允许windows客户端访问自己的宿主目录。
+
+1、安装samba，不需要配置文件修改，即可实现此功能。
+
+如果安装了SELinux需要先执行
+
+如果可以按到目录，就是访问不了，可以执行下面的命令解决
+
+```ruby
+setsebool -P samba_enable_home_dir_on
+```
+
+也有可能装了：Netfilter/IPtables
+
+关闭防火墙
+
+```
+iptables -F
+```
+
+
+
+2、设置用户Samba验证密码
+
+```shell
+smbpasswd -a 用户名
+```
+
+用户必须是系统用户
+
+ 
+
+windows断开连接dos命令
+
+```
+net use * /delete /y
+```
+
+服务器看谁在连接samba
+
+```shell
+smbstatus
+```
+
+提出，将pid kill掉即可
+
+
 
 
 
