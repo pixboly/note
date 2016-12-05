@@ -1293,7 +1293,22 @@ SharedPreferences接口所提供保存信息的只能是一些基本的数据类
 | putString(String key,String value)   | 保存一个String类型数据  |
 | remove(String key)                   | 删除指定key的数据      |
 
+取得的常量及方法：
 
+| 常量及方法                                    | 描述                                       |
+| ---------------------------------------- | ---------------------------------------- |
+| public static final int MODE_PRIVATE     | 创建的文件只能被自己的应用程序调用，或者被具有相同ID的应用程序访问       |
+| public staic final int MODE_WORLD_READABLE | 允许其他应用程序读取文件                             |
+| public static final int MODE_WORLD_WRITEABLE | 允许其他应用程序修改文件                             |
+| public SharedPreferences getSharedPreferences(String name,int mode) | 指定保存操作的文件名，同时指定操作的模式，可以是0、MODE_PRIVATE、MODE_WORLD_READABLE、MODE_WORLD_WRITEABLE |
+
+
+
+Android的SharedPreferences保存在/data/data/应用包名/shared_prefs
+
+路径当中。
+
+路径当中保存的都是xml文件形式保存的。
 
 
 

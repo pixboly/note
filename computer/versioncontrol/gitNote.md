@@ -363,3 +363,28 @@ Conflicts:
 
 ## 3、分支的管理
 
+
+
+
+
+# 四、git服务器创建
+
+参考地址：http://developer.51cto.com/art/201507/483448.htm
+
+
+
+## 1、自己的操作步骤
+
+在一个目录下输入：
+
+```
+git init --bare abc.git
+```
+
+在远程clone
+
+```
+git clone git@IP:/home/git/repo/abc.git
+```
+
+就可以使用了
